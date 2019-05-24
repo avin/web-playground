@@ -1,20 +1,42 @@
 {
-  "name": "web-playground",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "scripts": {
-    "dev": "parcel src/*.html --open",
-    "build": "parcel build src/*.html"
-  },
-  "devDependencies": {
-    "autoprefixer": "^9.5.1",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "parcel-bundler": "^1.12.3",
-    "sass": "^1.20.1"
-  },
-  "dependencies": {
-    "hello": "^0.3.2"
-  }
+    "name": "web-playground",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "dev": "parcel src/*.html --open",
+        "build": "parcel build src/*.html",
+        "prettier": "prettier-eslint --write \"src/**/*.{js,json,css}\"",
+        "lint": "eslint src/**/*.js"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "linters": {
+            "src/**/*.{js}": [
+                "prettier-eslint --write",
+                "git add"
+            ]
+        },
+        "concurrent": false
+    },
+    "devDependencies": {
+        "autoprefixer": "^9.5.1",
+        "babel-core": "^6.26.3",
+        "babel-eslint": "^10.0.1",
+        "babel-preset-env": "^1.7.0",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-config-prettier": "^4.3.0",
+        "eslint-plugin-import": "^2.17.2",
+        "husky": "^2.3.0",
+        "lint-staged": "^8.1.7",
+        "parcel-bundler": "^1.12.3",
+        "prettier-eslint": "^8.8.2",
+        "prettier-eslint-cli": "^4.7.1",
+        "sass": "^1.20.1"
+    },
+    "dependencies": {}
 }
