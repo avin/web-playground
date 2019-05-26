@@ -46,7 +46,7 @@ body {
     }
 
     &__section {
-        margin-top: 40px;
+        margin-top: 60px;
         padding-left: 60px;
 
         @media (max-width: 700px) {
@@ -144,9 +144,10 @@ body {
     }
 
     &__title {
-        margin-top: 40px;
+        margin-top: 50px;
         margin-bottom: 20px;
-        font-size: 1.5em;
+        font-size: 1.25em;
+        font-weight: bold;
         position: relative;
 
         &:after {
@@ -171,7 +172,7 @@ body {
 
 .header {
     display: flex;
-    margin-bottom: 60px;
+    margin-bottom: 90px;
 
     @media (max-width: 900px) {
         flex-wrap: wrap;
@@ -244,8 +245,8 @@ body {
     }
 
     &__position {
-        font-size: 2em;
-        font-weight: bolder;
+        font-size: 1.5em;
+        //font-weight: bolder;
 
         color: $gray3;
 
@@ -257,6 +258,7 @@ body {
 
 .about {
     position: relative;
+    margin-bottom: 58px;
     &:before {
         content: '';
         width: 20px;
