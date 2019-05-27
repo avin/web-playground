@@ -25,8 +25,12 @@ HTML/CSS/JS experiments
 * [https://flatuicolors.com/](https://flatuicolors.com/) - Color palettes
 * [https://lospec.com/palette-list](https://lospec.com/palette-list) - Palettes for pixel art
 
-
 ## Images
 
 * [https://www.pexels.com](https://www.pexels.com) - Free images stock
+
+## Design tools
+
+* [https://www.figma.com](https://www.figma.com) - UI prototyping tool
+* [https://www.photopea.com/](https://www.photopea.com/) - Online "photoshop" (.psd, .sketch, .xd)
 
