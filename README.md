@@ -35,4 +35,10 @@ HTML/CSS/JS experiments
 * [https://www.photopea.com/](https://www.photopea.com/) - Online "photoshop" (.psd, .sketch, .xd)
 * [https://avocode.com/](https://avocode.com/) - Maket viewer (.psd, .sketch) `$$$ + trial`
 
+## Icons
+
+* [http://fontello.com/](http://fontello.com/) - Icon fonts generator
+* [https://icomoon.io/](https://icomoon.io/) - Icons (SVG & Fonts)
+* [https://fontawesome.com](https://fontawesome.com) - Icons font
+* [https://www.flaticon.com/](https://www.flaticon.com/) - Svg icons collection
 
