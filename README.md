@@ -13,6 +13,7 @@ HTML/CSS/JS experiments
 * [caniuse.com](https://caniuse.com/) - Browser features support table
 * [https://easings.net/en](https://easings.net/en) - Easing cheat sheet
 * [https://yoksel.github.io/flex-cheatsheet/](https://yoksel.github.io/flex-cheatsheet/) - Flex cheat sheet
+* [https://htmlreference.io/](https://htmlreference.io/) - Guide to HTML
 
 ## Colors
 
