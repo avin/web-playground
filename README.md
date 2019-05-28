@@ -14,6 +14,8 @@ HTML/CSS/JS experiments
 * [https://easings.net/en](https://easings.net/en) - Easing cheat sheet
 * [https://yoksel.github.io/flex-cheatsheet/](https://yoksel.github.io/flex-cheatsheet/) - Flex cheat sheet
 * [https://htmlreference.io/](https://htmlreference.io/) - Guide to HTML
+* [https://webref.ru/](https://webref.ru/) - Guide to HTML/CSS (`RU`)
+
 
 ## Colors
 
@@ -34,7 +36,7 @@ HTML/CSS/JS experiments
 
 * [https://www.figma.com](https://www.figma.com) - UI prototyping tool
 * [https://www.photopea.com/](https://www.photopea.com/) - Online "photoshop" (.psd, .sketch, .xd)
-* [https://avocode.com/](https://avocode.com/) - Maket viewer (.psd, .sketch) `$$$ + trial`
+* [https://avocode.com/](https://avocode.com/) - Maket viewer (.psd, .sketch) (`$$$ + trial`)
 
 ## Icons
 
