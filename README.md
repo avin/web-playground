@@ -28,6 +28,7 @@ HTML/CSS/JS experiments
 * [https://dribbble.com/colors](https://dribbble.com/colors/8930e8) - Dribble color theme search
 * [https://flatuicolors.com/](https://flatuicolors.com/) - Color palettes
 * [https://lospec.com/palette-list](https://lospec.com/palette-list) - Palettes for pixel art
+* [https://liveweave.com/colors/index.html](https://liveweave.com/colors/index.html) - Color circle picker
 
 ## Images
 
