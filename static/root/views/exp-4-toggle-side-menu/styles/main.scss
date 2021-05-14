@@ -1,0 +1,131 @@
+// @process
+
+@import 'static/_common/styles/colors.scss';
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: $light-gray3;
+}
+
+.content {
+    margin: 100px 40px;
+}
+
+.side-menu {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transition: 0.2s;
+
+    * {
+        box-sizing: border-box;
+    }
+
+    &.side-menu_active {
+        left: 200px;
+    }
+}
+
+.side-menu__main {
+    width: 200px;
+    background-color: $white;
+    height: 100%;
+    display: flex;
+    padding-top: 90px;
+    position: absolute;
+    right: 0;
+    box-shadow: 0 0 5px 0 $gray3;
+}
+
+.side-menu__menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    li {
+        padding: 0;
+        border-bottom: 1px solid $light-gray1;
+        &:first-child {
+            border-top: 1px solid $light-gray1;
+        }
+    }
+}
+
+.side-menu__menu-item {
+    padding: 10px;
+    margin: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: $dark-gray3;
+
+    &:hover {
+        background-color: $blue3;
+        color: $white;
+    }
+}
+
+.side-menu__btn {
+    position: absolute;
+    right: -90px;
+    top: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: $blue5;
+    border-radius: 50px;
+    z-index: 5;
+    transition: 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px 0 $gray3;
+    -webkit-tap-highlight-color: transparent;
+
+    .side-menu_active & {
+        right: 20px;
+        box-shadow: 0 0 0 0 $gray3;
+    }
+}
+
+%burger-line {
+    width: 20px;
+    height: 2px;
+    background-color: $dark-gray3;
+    transition: 0.4s;
+}
+
+.side-menu__btn-burger {
+    $element: &;
+    @extend %burger-line;
+
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        @extend %burger-line;
+    }
+
+    &:before {
+        transform: translateY(-5px);
+    }
+    &:after {
+        transform: translateY(5px);
+    }
+
+    .side-menu__btn_close & {
+        background-color: rgba(#000, 0);
+        transform: rotate(180deg);
+
+        &:before {
+            transform: rotate(45deg);
+        }
+        &:after {
+            transform: rotate(-45deg);
+        }
+    }
+}

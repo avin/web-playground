@@ -6,6 +6,15 @@ HTML/CSS/JS experiments
 
 [ >> [View online](https://avin.github.io/web-playground/) << ]
 
+## Dev
+
+```sh
+npm run dev
+```
+
+Then go to `https://localhost:3003/index.html`
+
+
 # Useful resources
 
 ## Cheat sheets
