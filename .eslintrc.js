@@ -24,5 +24,6 @@ module.exports = {
         'no-lonely-if': 'off',
         'prefer-destructuring': 'off',
         'import/order': 'off',
+        'no-new': 'off',
     },
 };

@@ -1,0 +1,63 @@
+// @process
+
+@import 'static/_common/styles/colors.scss';
+
+body,
+html {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main {
+}
+
+.Slider {
+    user-select: none;
+    &--labels {
+        position: relative;
+        height: 20px;
+    }
+
+    &--line {
+        border-bottom: 1px solid black;
+        position: relative;
+    }
+
+    &--mark {
+        $size: 21px;
+
+        width: $size;
+        height: $size;
+        border-radius: 50%;
+        border: 1px solid black;
+        background-color: white;
+        position: absolute;
+        z-index: 1;
+        top: #{-$size/2};
+        left: #{-$size/2};
+        cursor: pointer;
+    }
+
+    &--label{
+        position: absolute;
+
+        &_left{
+            left: 0;
+            top: 50%;
+            transform: translateX(-50%);
+        }
+
+        &_right{
+            right: 0;
+            top: 50%;
+            transform: translateX(50%);
+        }
+    }
+}
