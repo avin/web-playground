@@ -20,7 +20,8 @@ function generateWebpackConfig({
         devtool: (() => {
             if (isEnvDevelopment) {
                 return 'eval';
-            } else if (isEnvProduction) {
+            }
+            if (isEnvProduction) {
                 return useProductionSourceMap ? 'source-map' : false;
             }
             return false;
@@ -47,11 +48,8 @@ function generateWebpackConfig({
                 {
                     test: /\.(glsl|vs|fs|vert|frag)$/,
                     exclude: /node_modules/,
-                    loader: [
-                        require.resolve('raw-loader'),
-                        require.resolve('glslify-loader')
-                    ]
-                }
+                    loader: [require.resolve('raw-loader'), require.resolve('glslify-loader')],
+                },
             ],
         },
 

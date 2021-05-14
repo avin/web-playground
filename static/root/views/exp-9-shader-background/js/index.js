@@ -3,14 +3,14 @@
 import fragmentShaderSrc from './shaders/fragment.glsl';
 import vertexShaderSrc from './shaders/vertex.glsl';
 
-window.requestAnimFrame = (function() {
+window.requestAnimFrame = (function () {
     return (
         window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame ||
         window.msRequestAnimationFrame ||
-        function(callback) {
+        function (callback) {
             window.setTimeout(callback, 1000 / 60);
         }
     );
@@ -75,7 +75,7 @@ function BackgroundAnimation() {
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     };
 
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', () => {
         resize();
     });
 }

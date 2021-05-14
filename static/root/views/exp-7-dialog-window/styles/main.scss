@@ -50,11 +50,11 @@ body {
         justify-content: center;
         align-items: center;
 
-        transition: .25s;
+        transition: 0.25s;
         opacity: 1;
 
         #{$block}_hidden & {
-            opacity: .0;
+            opacity: 0;
         }
     }
     &__window {
@@ -64,9 +64,8 @@ body {
         border-radius: 5px;
         overflow: hidden;
 
-        transition: .25s;
+        transition: 0.25s;
         transform: translateY(0px);
-
 
         #{$block}_hidden & {
             transform: translateY(60px);

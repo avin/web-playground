@@ -36,8 +36,8 @@ body {
 .desktop {
     background-color: $white;
     position: absolute;
-    box-shadow: 5px 5px 5px 0 rgba($gray1, .1);
-    transition: .5s;
+    box-shadow: 5px 5px 5px 0 rgba($gray1, 0.1);
+    transition: 0.5s;
     transform: translateY(100%);
     //border-radius: 10px;
     border: 10px solid $light-gray1;
@@ -50,7 +50,7 @@ body {
     bottom: 0;
     background: $light-gray3;
     z-index: 3;
-    transition-delay: 0.0s;
+    transition-delay: 0s;
 }
 
 .tablet {

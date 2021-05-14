@@ -13,9 +13,7 @@ const staticHashVersion = require('static-hash-version');
 const _webpackMiddlewaresCache = {};
 
 module.exports = {
-    mapping: [
-        ['./static/root', '/'],
-    ],
+    mapping: [['./static/root', '/']],
 
     http: {
         port: 3003,
