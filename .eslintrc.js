@@ -1,8 +1,8 @@
 module.exports = {
     parser: 'babel-eslint',
     extends: ['airbnb-base', 'prettier'],
-    "env": {
-        "browser": true,
+    env: {
+        browser: true,
     },
     rules: {
         indent: ['error', 4, { SwitchCase: 1 }],
@@ -14,7 +14,7 @@ module.exports = {
         'func-names': ['error', 'never'],
         'no-underscore-dangle': 'off',
         'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
-        "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
+        'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
         'no-param-reassign': 'off',
         'class-methods-use-this': 'off',
         'no-shadow': 'off',
@@ -22,6 +22,7 @@ module.exports = {
         'spaced-comment': ['error', 'always'],
         'default-case': 'off',
         'no-lonely-if': 'off',
-        'prefer-destructuring': 'off'
+        'prefer-destructuring': 'off',
+        'import/order': 'off',
     },
 };
