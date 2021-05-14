@@ -22,7 +22,7 @@ body {
     user-select: none;
     &--labels {
         position: relative;
-        height: 20px;
+        height: 35px;
     }
 
     &--line {
@@ -50,13 +50,13 @@ body {
 
         &_left{
             left: 0;
-            top: 50%;
+            bottom: 0%;
             transform: translateX(-50%);
         }
 
         &_right{
             right: 0;
-            top: 50%;
+            bottom: 0%;
             transform: translateX(50%);
         }
     }
