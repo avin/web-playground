@@ -25,6 +25,7 @@ Then go to `https://localhost:3003/index.html`
 * [https://yoksel.github.io/flex-cheatsheet/](https://yoksel.github.io/flex-cheatsheet/) - Flex cheat sheet
 * [https://htmlreference.io/](https://htmlreference.io/) - Guide to HTML
 * [https://webref.ru/](https://webref.ru/) - Guide to HTML/CSS (`RU`)
+* [Illustrated GRID cheat sheet](https://dev.to/joyshaheb/css-grid-cheat-sheet-illustrated-in-2021-1a3)
 
 
 ## Colors
