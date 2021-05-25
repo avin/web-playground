@@ -30,7 +30,8 @@
         "husky": "2.7.0",
         "lint-staged": "8.2.1",
         "prettier-eslint": "12.0.0",
-        "prettier-eslint-cli": "5.0.1"
+        "prettier-eslint-cli": "5.0.1",
+        "mocker-api": "1.11.2"
     },
     "dependencies": {
         "@babel/core": "7.14.2",

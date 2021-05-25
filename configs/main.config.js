@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const _ = require('lodash');
 const webpack = require('webpack');
+const mockerApi = require('mocker-api');
 const { defaultFileDevProcessing, defaultFileBuildProcessing, getFilesList } = require('multi-static/common');
 const readFirstLine = require('read-first-line');
 const generateWebpackConfig = require('./utils/generateWebpackConfig');
@@ -166,5 +167,9 @@ module.exports = {
                     writeToFile: true,
                 });
             });
+    },
+
+    beforeDevStart(app) {
+        mockerApi(app, path.resolve(__dirname, './mockerApi/index.js'));
     },
 };
