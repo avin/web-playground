@@ -28,7 +28,7 @@ const fragment = `\
 #define PI 3.1415926
 #define PI2 6.2831852
 
-#define SF 1./min(iResolution.x,iResolution.y)
+#define SF 1./min(resolution_x,resolution_y)
 #define SS(l,s) smoothstep(SF,-SF,l-s)
 
 #define hue(v)  ( .6 + .6 * cos( 6.3*(v)  + vec4(0,23,21,0)  ) )
@@ -75,13 +75,13 @@ float snoise(vec3 p)
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {
-    vec2 iResolution = vec2(1000., 600.);
+    vec2 iResolution = vec2(resolution_x, resolution_y);
 
-    vec2 uv = (fragCoord - iResolution.xy * 0.5) / iResolution.y;
+    vec2 uv = (fragCoord - iResolution.xy * 0.5) / min(iResolution.y, iResolution.x);
 
     float l = length(uv);
 
-    vec3 result = vec3(0.);
+    vec3 result = vec3(mouse_x/iResolution.x, mouse_y/iResolution.y, 0.);
 
     for(float i=40.; i>0.; i-=1.){
 
@@ -96,7 +96,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
         result = mix(result, col, d);
 
-        float dd =  SS(l, zn) * SS(zn-SF, l);
+        float dd = SS(l, zn) * SS(zn-SF, l);
 
         result = mix(result, vec3(0.), dd);
     }
@@ -216,11 +216,13 @@ void main() {
         },
     });
 
-    const uniformTime = new Float32Array([0]);
+    const timeBufferData = new Float32Array([0]);
+    const mouseBufferData = new Float32Array([0, 0]);
+    const resolutionBufferData = new Float32Array([0, 0]);
 
     function frame(timestamp) {
-        uniformTime[0] = timestamp / 1000;
-        device.queue.writeBuffer(buffer, 0, uniformTime.buffer);
+        timeBufferData[0] = timestamp / 1000;
+        device.queue.writeBuffer(buffer, 0, timeBufferData.buffer, 0, 4);
 
         const commandEncoder = device.createCommandEncoder();
         const textureView = swapChain.getCurrentTexture().createView();
@@ -244,6 +246,25 @@ void main() {
         device.queue.submit([commandEncoder.finish()]);
         requestAnimationFrame(frame);
     }
+
+    canvas.addEventListener("mousemove",(e) => {
+        const rect = e.target.getBoundingClientRect();
+        const [x, y] = [e.clientX - rect.left, e.clientY - rect.top];
+
+        mouseBufferData[0] = x;
+        mouseBufferData[1] = y;
+        device.queue.writeBuffer(buffer, 4, mouseBufferData.buffer, 0, 8);
+    })
+
+    new ResizeObserver(() => {
+        const { width, height } = canvas.parentElement.getBoundingClientRect();
+        resolutionBufferData[0] = width;
+        resolutionBufferData[1] = height;
+        device.queue.writeBuffer(buffer, 12, resolutionBufferData.buffer, 0, 8);
+
+        Object.assign(canvas, { width, height });
+
+    }).observe(canvas.parentElement);
 
     requestAnimationFrame(frame);
 })();
