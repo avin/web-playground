@@ -4,9 +4,13 @@ module.exports = {
     env: {
         browser: true,
     },
+    globals: {
+        GPUBufferUsage: 'readonly',
+        GPUShaderStage: 'readonly',
+    },
     rules: {
         indent: ['error', 4, { SwitchCase: 1 }],
-        'max-len': ['error', 120],
+        'max-len': 'off',
         'no-bitwise': 'off',
         'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
         'no-mixed-operators': 'off',
