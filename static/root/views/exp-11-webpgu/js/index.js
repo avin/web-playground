@@ -12,11 +12,14 @@ const vertex = `\
 
 const fragment = `\
   #version 450
+  layout(set = 0, binding = 0) uniform UBO {
+    float iTime;
+    float mouse_x;
+    float mouse_y;
+    float resolution_x;
+    float resolution_y;
+  };
   layout(location = 0) out vec4 outColor;
-
-
-
-
 
 // --------- START-SHADER-TOY-CODE-HERE ------------
 
@@ -54,7 +57,7 @@ float simplex_noise(vec3 p) {
 
 vec4 mainImage(in vec4 fragColor, in vec2 uv) {
 
-  float iTime = 0.;
+  // float iTime = 0.;
 
   float a = sin(atan(uv.y, uv.x));
   float am = abs(a - .5) / 4.;
@@ -85,12 +88,9 @@ void main() {
     vec2 iResolution = vec2(1000., 600.);
     vec2 uv = (gl_FragCoord.xy - iResolution*.5) / iResolution.y;
 
-    outColor = mainImage(gl_FragCoord, uv);
+    outColor = mainImage(gl_FragCoord, uv*.5);
 
 }
-
-
-
 `;
 
 (async () => {
@@ -120,7 +120,7 @@ void main() {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
-    const context = canvas.getContext('gpupresent');
+    const context = canvas.getContext('webgpu');
 
     if (!context || !navigator.gpu) {
         document.getElementById('error').style.display = 'block';
@@ -137,7 +137,42 @@ void main() {
         format: swapChainFormat,
     });
 
+    // ------------
+
+    const bindGroupLayout = device.createBindGroupLayout({
+        entries: [
+            {
+                binding: 0,
+                visibility: GPUShaderStage.FRAGMENT,
+                buffer: {
+                    type: 'uniform',
+                    minBindingSize: 20,
+                },
+            },
+        ],
+    });
+
+    const buffer = device.createBuffer({
+        size: Float32Array.BYTES_PER_ELEMENT * 5,
+        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+
+    const bindGroup = device.createBindGroup({
+        layout: bindGroupLayout,
+        entries: [
+            {
+                binding: 0,
+                resource: { buffer },
+            },
+        ],
+    });
+
+    // ------------
+
     const pipeline = device.createRenderPipeline({
+        layout: device.createPipelineLayout({
+            bindGroupLayouts: [bindGroupLayout],
+        }),
         vertex: {
             module: device.createShaderModule({
                 // code: vertexShaderWgslCode,
@@ -162,7 +197,22 @@ void main() {
         },
     });
 
-    function frame() {
+    const uniformTime = new Float32Array([0]);
+
+    function frame(timestamp) {
+
+        // console.log(a);
+
+        // bufferSubData(
+        //     device,
+        //     buffer,
+        //     Float32Array.BYTES_PER_ELEMENT * 0,
+        //     new Float32Array([timestamp / 1000])
+        // );
+
+        uniformTime[0] = (timestamp) / 1000;
+        device.queue.writeBuffer(buffer, 0, uniformTime.buffer);
+
         const commandEncoder = device.createCommandEncoder();
         const textureView = swapChain.getCurrentTexture().createView();
 
@@ -178,6 +228,7 @@ void main() {
 
         const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
         passEncoder.setPipeline(pipeline);
+        passEncoder.setBindGroup(0, bindGroup);
         passEncoder.draw(6, 1, 0, 0);
         passEncoder.endPass();
 
