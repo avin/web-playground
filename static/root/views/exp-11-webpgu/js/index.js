@@ -28,7 +28,6 @@
     const context = canvas.getContext('webgpu');
 
     if (!context || !navigator.gpu) {
-
         throw new Error('WebGPU does not work');
     }
 
@@ -44,40 +43,25 @@
 
     // ------------
 
-    const bindGroupLayout = device.createBindGroupLayout({
-        entries: [
-            {
-                binding: 0,
-                visibility: GPUShaderStage.FRAGMENT,
-                buffer: {
-                    type: 'uniform',
-                    minBindingSize: 20,
-                },
-            },
-        ],
-    });
-
-    const buffer = device.createBuffer({
-        size: Float32Array.BYTES_PER_ELEMENT * 5,
-        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-    });
-
-    const bindGroup = device.createBindGroup({
-        layout: bindGroupLayout,
-        entries: [
-            {
-                binding: 0,
-                resource: { buffer },
-            },
-        ],
-    });
+    // const bindGroupLayout = device.createBindGroupLayout({
+    //     entries: [
+    //         {
+    //             binding: 0,
+    //             visibility: GPUShaderStage.FRAGMENT,
+    //             buffer: {
+    //                 type: 'uniform',
+    //                 minBindingSize: 20,
+    //             },
+    //         },
+    //     ],
+    // });
 
     // ------------
 
     const pipeline = device.createRenderPipeline({
-        layout: device.createPipelineLayout({
-            bindGroupLayouts: [bindGroupLayout],
-        }),
+        // layout: device.createPipelineLayout({
+        //     bindGroupLayouts: [bindGroupLayout],
+        // }),
         vertex: {
             module: device.createShaderModule({
                 code: glslang.compileGLSL(window.SHADERS.vertex, 'vertex'),
@@ -99,6 +83,44 @@
             topology: 'triangle-list',
         },
     });
+
+    const buffer = device.createBuffer({
+        size: Float32Array.BYTES_PER_ELEMENT * 5,
+        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+
+    const bindGroup = device.createBindGroup({
+        layout: pipeline.getBindGroupLayout(0),
+        entries: [
+            {
+                binding: 0,
+                resource: { buffer },
+            },
+        ],
+    });
+
+    const sampler = device.createSampler({
+        magFilter: 'linear',
+        minFilter: 'linear',
+    });
+
+    const img = document.createElement('img');
+    img.src = './img/Di-3d.png';
+    await img.decode();
+    const imageBitmap = await createImageBitmap(img);
+
+    const [srcWidth, srcHeight] = [imageBitmap.width, imageBitmap.height];
+    const cubeTexture = device.createTexture({
+        size: [srcWidth, srcHeight, 1],
+        format: 'rgba8unorm',
+        usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
+    });
+    device.queue.copyExternalImageToTexture({ source: imageBitmap }, { texture: cubeTexture }, [
+        imageBitmap.width,
+        imageBitmap.height,
+    ]);
+
+    // -----------------------
 
     const timeBufferData = new Float32Array([0]);
     const mouseBufferData = new Float32Array([0, 0]);
