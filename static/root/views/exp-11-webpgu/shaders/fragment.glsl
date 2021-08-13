@@ -6,6 +6,9 @@ layout(set = 0, binding = 0) uniform UBO {
   float resolution_x;
   float resolution_y;
 };
+layout(set = 0, binding = 1) uniform sampler baseSampler;
+layout(set = 0, binding = 2) uniform texture2D environmentMap;
+
 layout(location = 0) out vec4 outColor;
 
 // --------- START-SHADER-TOY-CODE-HERE ------------
@@ -97,4 +100,16 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
 // --------- END-SHADER-TOY-CODE-HERE ------------
 
-void main() { mainImage(outColor, gl_FragCoord.xy); }
+void main() {
+
+  vec2 iResolution = vec2(resolution_x, resolution_y);
+  vec2 uv = (gl_FragCoord.xy - iResolution.xy * 0.5) /
+            min(iResolution.y, iResolution.x);
+
+  vec4 f_color = texture(sampler2D(environmentMap, baseSampler), uv);
+
+  mainImage(outColor, gl_FragCoord.xy);
+
+  // outColor = vec4(1., 1., 0., 1.);
+  outColor = outColor + f_color;
+}

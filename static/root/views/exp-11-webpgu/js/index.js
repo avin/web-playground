@@ -84,6 +84,67 @@
         },
     });
 
+    const sampler = device.createSampler({
+        magFilter: 'linear',
+        minFilter: 'linear',
+    });
+
+    // const img = document.createElement('img');
+    // img.src = './img/Di-3d.png';
+    // await img.decode();
+    // const imageBitmap = await createImageBitmap(img);
+    //
+    // const [srcWidth, srcHeight] = [imageBitmap.width, imageBitmap.height];
+    // const cubeTexture = device.createTexture({
+    //     size: [srcWidth, srcHeight, 1],
+    //     format: 'rgba8unorm',
+    //     usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
+    // });
+    // device.queue.copyExternalImageToTexture({ source: imageBitmap }, { texture: cubeTexture }, [
+    //     imageBitmap.width,
+    //     imageBitmap.height,
+    // ]);
+    //
+    // const textures = [0, 1].map(() => {
+    //     return device.createTexture({
+    //         size: {
+    //             width: srcWidth,
+    //             height: srcHeight,
+    //         },
+    //         format: 'rgba8unorm',
+    //         usage:
+    //             GPUTextureUsage.COPY_DST |
+    //             GPUTextureUsage.STORAGE_BINDING |
+    //             GPUTextureUsage.TEXTURE_BINDING,
+    //     });
+    // });
+
+    // Fetch the image and upload it into a GPUTexture.
+    let cubeTexture;
+    {
+        const img = document.createElement('img');
+        img.src = './img/Di-3d.png';
+        await img.decode();
+        const imageBitmap = await createImageBitmap(img);
+
+        cubeTexture = device.createTexture({
+            size: [imageBitmap.width, imageBitmap.height, 1],
+            format: 'rgba8unorm',
+            usage:
+                GPUTextureUsage.TEXTURE_BINDING |
+                GPUTextureUsage.COPY_DST |
+                GPUTextureUsage.RENDER_ATTACHMENT,
+        });
+        device.queue.copyExternalImageToTexture(
+            { source: imageBitmap },
+            { texture: cubeTexture },
+            [imageBitmap.width, imageBitmap.height]
+        );
+    }
+
+    // -----------------------
+
+
     const buffer = device.createBuffer({
         size: Float32Array.BYTES_PER_ELEMENT * 5,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
@@ -96,29 +157,16 @@
                 binding: 0,
                 resource: { buffer },
             },
+            {
+                binding: 1,
+                resource: sampler,
+            },
+            {
+                binding: 2,
+                resource: cubeTexture.createView(),
+            },
         ],
     });
-
-    const sampler = device.createSampler({
-        magFilter: 'linear',
-        minFilter: 'linear',
-    });
-
-    const img = document.createElement('img');
-    img.src = './img/Di-3d.png';
-    await img.decode();
-    const imageBitmap = await createImageBitmap(img);
-
-    const [srcWidth, srcHeight] = [imageBitmap.width, imageBitmap.height];
-    const cubeTexture = device.createTexture({
-        size: [srcWidth, srcHeight, 1],
-        format: 'rgba8unorm',
-        usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
-    });
-    device.queue.copyExternalImageToTexture({ source: imageBitmap }, { texture: cubeTexture }, [
-        imageBitmap.width,
-        imageBitmap.height,
-    ]);
 
     // -----------------------
 
