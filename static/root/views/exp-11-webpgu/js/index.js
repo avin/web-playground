@@ -28,8 +28,8 @@
     const context = canvas.getContext('webgpu');
 
     if (!context || !navigator.gpu) {
-        document.getElementById('error').style.display = 'block';
-        return;
+
+        throw new Error('WebGPU does not work');
     }
 
     const adapter = await navigator.gpu.requestAdapter();
