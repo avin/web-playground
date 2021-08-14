@@ -2,25 +2,6 @@
     const glslangModule = await import('https://unpkg.com/@webgpu/glslang@0.0.15/dist/web-devel/glslang.js');
     const glslang = await glslangModule.default();
 
-    // const vertexShaderWgslCode = `
-    // [[stage(vertex)]]
-    // fn main([[builtin(vertex_index)]] VertexIndex : u32) -> [[builtin(position)]] vec4<f32> {
-    //   var pos : array<vec2<f32>, 6> = array<vec2<f32>, 6>(
-    //     vec2<f32>(-1., -1.), vec2<f32>(-1., 1.), vec2<f32>(1., 1.),
-    //     vec2<f32>(1., -1.), vec2<f32>(-1., -1.), vec2<f32>(1., 1.)
-    //   );
-    //
-    //   return vec4<f32>(pos[VertexIndex], 0.0, 1.0);
-    // }`;
-    //
-    // const fragmentShaderWgslCode = `
-    // [[stage(fragment)]]
-    // fn main([[builtin(position)]] FragCoord : vec4<f32>) -> [[location(0)]] vec4<f32> {
-    //   let iResolution = vec2<f32>(1000., 680.);
-    //   let uv = (2. * FragCoord.xy - iResolution) / iResolution.y * vec2<f32>(1., -1.);
-    //   return vec4<f32>(uv, 1.0, 1.0);
-    // }`;
-
     const canvas = document.getElementById('canvas');
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
@@ -41,27 +22,7 @@
         format: swapChainFormat,
     });
 
-    // ------------
-
-    // const bindGroupLayout = device.createBindGroupLayout({
-    //     entries: [
-    //         {
-    //             binding: 0,
-    //             visibility: GPUShaderStage.FRAGMENT,
-    //             buffer: {
-    //                 type: 'uniform',
-    //                 minBindingSize: 20,
-    //             },
-    //         },
-    //     ],
-    // });
-
-    // ------------
-
     const pipeline = device.createRenderPipeline({
-        // layout: device.createPipelineLayout({
-        //     bindGroupLayouts: [bindGroupLayout],
-        // }),
         vertex: {
             module: device.createShaderModule({
                 code: glslang.compileGLSL(window.SHADERS.vertex, 'vertex'),
@@ -84,41 +45,6 @@
         },
     });
 
-    const sampler = device.createSampler({
-        magFilter: 'linear',
-        minFilter: 'linear',
-    });
-
-    // const img = document.createElement('img');
-    // img.src = './img/Di-3d.png';
-    // await img.decode();
-    // const imageBitmap = await createImageBitmap(img);
-    //
-    // const [srcWidth, srcHeight] = [imageBitmap.width, imageBitmap.height];
-    // const cubeTexture = device.createTexture({
-    //     size: [srcWidth, srcHeight, 1],
-    //     format: 'rgba8unorm',
-    //     usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
-    // });
-    // device.queue.copyExternalImageToTexture({ source: imageBitmap }, { texture: cubeTexture }, [
-    //     imageBitmap.width,
-    //     imageBitmap.height,
-    // ]);
-    //
-    // const textures = [0, 1].map(() => {
-    //     return device.createTexture({
-    //         size: {
-    //             width: srcWidth,
-    //             height: srcHeight,
-    //         },
-    //         format: 'rgba8unorm',
-    //         usage:
-    //             GPUTextureUsage.COPY_DST |
-    //             GPUTextureUsage.STORAGE_BINDING |
-    //             GPUTextureUsage.TEXTURE_BINDING,
-    //     });
-    // });
-
     // Fetch the image and upload it into a GPUTexture.
     let cubeTexture;
     {
@@ -130,20 +56,15 @@
         cubeTexture = device.createTexture({
             size: [imageBitmap.width, imageBitmap.height, 1],
             format: 'rgba8unorm',
-            usage:
-                GPUTextureUsage.TEXTURE_BINDING |
-                GPUTextureUsage.COPY_DST |
-                GPUTextureUsage.RENDER_ATTACHMENT,
+            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
         });
-        device.queue.copyExternalImageToTexture(
-            { source: imageBitmap },
-            { texture: cubeTexture },
-            [imageBitmap.width, imageBitmap.height]
-        );
+        device.queue.copyExternalImageToTexture({ source: imageBitmap }, { texture: cubeTexture }, [
+            imageBitmap.width,
+            imageBitmap.height,
+        ]);
     }
 
     // -----------------------
-
 
     const buffer = device.createBuffer({
         size: Float32Array.BYTES_PER_ELEMENT * 5,
@@ -159,7 +80,10 @@
             },
             {
                 binding: 1,
-                resource: sampler,
+                resource: device.createSampler({
+                    magFilter: 'linear',
+                    minFilter: 'linear',
+                }),
             },
             {
                 binding: 2,
