@@ -6,6 +6,7 @@ layout(set = 0, binding = 0) uniform UBO {
   float mouse_z;
   float resolution_x;
   float resolution_y;
+  float fov;
 };
 layout(location = 0) in vec2 vUV;
 layout(location = 0) out vec4 outColor;
@@ -190,7 +191,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   float time = iTime * .525 * 1.1 * 1.;
   time = mod(time, 100.);
 
-  vec3 r = normalize(vec3(uv, .75));
+  vec3 r = normalize(vec3(uv, fov));
 
   r.yz *= rotation(0.15 - m.y);
   r.xy *= rotation(sin(time + 10.0) * 0.5);

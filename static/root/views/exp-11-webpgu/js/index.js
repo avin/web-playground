@@ -7,6 +7,7 @@
     canvas.height = canvas.clientHeight;
 
     const context = canvas.getContext('gpupresent');
+    // const context = canvas.getContext('webgpu');
 
     if (!context || !navigator.gpu) {
         throw new Error('WebGPU does not work');
@@ -17,8 +18,8 @@
 
     const devicePixelRatio = window.devicePixelRatio || 1;
     const presentationSize = [canvas.clientWidth * devicePixelRatio, canvas.clientHeight * devicePixelRatio];
-    // const presentationFormat = context.getPreferredFormat(adapter);
-    const presentationFormat = 'bgra8unorm';
+    const presentationFormat = context.getPreferredFormat(adapter);
+    // const presentationFormat = 'bgra8unorm';
 
     const swapChain = context.configureSwapChain({
         device,
@@ -53,7 +54,7 @@
     // -----------------------
 
     const buffer = device.createBuffer({
-        size: Float32Array.BYTES_PER_ELEMENT * 6,
+        size: Float32Array.BYTES_PER_ELEMENT * 7,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 
@@ -97,37 +98,6 @@
         },
     });
 
-    const cubeTexture = device.createTexture({
-        size: presentationSize,
-        format: presentationFormat,
-        usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
-    });
-
-    const postBindGroup = device.createBindGroup({
-        layout: postPipeline.getBindGroupLayout(0),
-        entries: [
-            {
-                binding: 0,
-                resource: { buffer },
-            },
-            {
-                binding: 1,
-                resource: device.createSampler({
-                    magFilter: 'linear',
-                    minFilter: 'linear',
-                }),
-            },
-            {
-                binding: 2,
-                resource: cubeTexture.createView(),
-            },
-            {
-                binding: 3,
-                resource: { buffer: dofParamsBuffer },
-            },
-        ],
-    });
-
     // -----------------------
 
     const renderPassDescriptor = {
@@ -144,14 +114,28 @@
     const mouseBufferData = new Float32Array([0, 0, 0]);
     const resolutionBufferData = new Float32Array([0, 0]);
 
+
+    const fovParams = {
+        fov: .77,
+    };
+    const fovBufferData = new Float32Array([fovParams.fov]);
     const dofParams = {
         far: 100,
-        radius: 0.5,
+        radius: 1.0,
         focusPoint: 88,
     };
     const dofParamsBufferData = new Float32Array([dofParams.far, dofParams.radius, dofParams.focusPoint]);
     const gui = new window.dat.GUI();
     gui.closed = true;
+    gui.add(fovParams, 'fov', .5, 1.5)
+        .name('FOV')
+        .listen()
+        .onChange((value) => {
+            fovBufferData[0] = value;
+            device.queue.writeBuffer(buffer, 24, fovBufferData.buffer, 0, 4);
+        });
+    device.queue.writeBuffer(buffer, 24, fovBufferData.buffer, 0, 4);
+
     gui.add(dofParams, 'far', 0, 1000)
         .name('DOF Far')
         .listen()
@@ -178,7 +162,62 @@
 
     device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 12);
 
+    let cubeTexture;
+    let postBindGroup;
     function frame(timestamp) {
+        if (
+            canvas.clientWidth !== presentationSize[0] ||
+            canvas.clientHeight !== presentationSize[1] ||
+            !cubeTexture ||
+            !postBindGroup
+        ) {
+            const { width, height } = canvas.parentElement.getBoundingClientRect();
+            resolutionBufferData[0] = width;
+            resolutionBufferData[1] = height;
+            device.queue.writeBuffer(buffer, 16, resolutionBufferData.buffer, 0, 8);
+
+            Object.assign(canvas, { width, height });
+
+            if (cubeTexture !== undefined) {
+                // Destroy the previous render target
+                cubeTexture.destroy();
+            }
+
+            presentationSize[0] = canvas.clientWidth;
+            presentationSize[1] = canvas.clientHeight;
+
+            cubeTexture = device.createTexture({
+                size: presentationSize,
+                format: presentationFormat,
+                usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
+            });
+
+            postBindGroup = device.createBindGroup({
+                layout: postPipeline.getBindGroupLayout(0),
+                entries: [
+                    {
+                        binding: 0,
+                        resource: { buffer },
+                    },
+                    {
+                        binding: 1,
+                        resource: device.createSampler({
+                            magFilter: 'linear',
+                            minFilter: 'linear',
+                        }),
+                    },
+                    {
+                        binding: 2,
+                        resource: cubeTexture.createView(),
+                    },
+                    {
+                        binding: 3,
+                        resource: { buffer: dofParamsBuffer },
+                    },
+                ],
+            });
+        }
+
         timeBufferData[0] = timestamp / 1000;
         device.queue.writeBuffer(buffer, 0, timeBufferData.buffer, 0, 4);
 
@@ -211,6 +250,7 @@
         postPassEncoder.endPass();
 
         device.queue.submit([commandEncoder.finish()]);
+
         requestAnimationFrame(frame);
     }
 
@@ -236,12 +276,7 @@
     canvas.addEventListener('mouseleave', handleMouseUp);
 
     new ResizeObserver(() => {
-        const { width, height } = canvas.parentElement.getBoundingClientRect();
-        resolutionBufferData[0] = width;
-        resolutionBufferData[1] = height;
-        device.queue.writeBuffer(buffer, 16, resolutionBufferData.buffer, 0, 8);
 
-        Object.assign(canvas, { width, height });
     }).observe(canvas.parentElement);
 
     requestAnimationFrame(frame);
