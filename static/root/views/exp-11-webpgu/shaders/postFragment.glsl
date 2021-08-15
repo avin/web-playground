@@ -15,16 +15,6 @@ layout(location = 0) out vec4 outColor;
 
 // --------- END-SHADER-TOY-CODE-HERE ------------
 
-//
-// Inspired by blog post:
-// http://tuxedolabs.blogspot.fr/2018/05/bokeh-depth-of-field-in-single-pass.html
-// Original scene: https://www.shadertoy.com/view/MsG3Dz
-//
-// There is still lots of flickering, I'm guessing this is because of the
-// original scene's lighting. Using PBR would probably fix the crazy specular
-// values we get sometimes As a quick way to remove flickering, we can use AA
-//
-
 #define DISPLAY_GAMMA 1.5
 
 #define GOLDEN_ANGLE 2.39996323
@@ -77,7 +67,8 @@ vec3 depthOfField(vec2 texCoord, float focusPoint, float focusScale) {
 void main() {
 
   vec2 iResolution = vec2(resolution_x, resolution_y);
-  vec2 uv = gl_FragCoord.xy / iResolution.xy;
+  vec2 fragCoord = gl_FragCoord.xy;
+  vec2 uv = fragCoord / iResolution.xy;
 
   vec4 color = texture(iChannel0, uv).rgba;
 

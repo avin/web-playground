@@ -172,11 +172,6 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec2 iResolution = vec2(resolution_x, resolution_y);
   vec3 iMouse = vec3(mouse_x, mouse_y, 0.);
 
-  // vec2 uv = (fragCoord - iResolution.xy * 0.5) / min(iResolution.y,
-  // iResolution.x) * vec2(1., -1.);
-
-  // vec2 uv = fragCoord.xy / iResolution.xy * vec2(1., -1.);
-
   vec2 uv = fragCoord.xy / iResolution.xy;
 
   vec2 m = vec2(0.00, 0.);
