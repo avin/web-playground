@@ -174,6 +174,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec3 iMouse = vec3(mouse_x, mouse_y, 0.);
 
   vec2 uv = vUV;
+  uv.y = 1. - uv.y;
 
   vec2 m = vec2(0.00, 0.);
   if (iMouse.z > 0.0) {
