@@ -185,7 +185,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   uv = uv * 2.0 - 1.0;
   uv.x *= iResolution.x / iResolution.y;
 
-  float time = iTime * .525 * 1.1;
+  float time = iTime * .525 * 1.1 * 1.;
   time = mod(time, 100.);
 
   vec3 r = normalize(vec3(uv, .75));
@@ -205,14 +205,16 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec3 col = mix(vec3(0.0), tCol, fog);
   // vec3 fc = vec3(fog);
 
-  // gamma
-  col = pow(clamp(col, .0, 1.0), vec3(0.95));
+//  // gamma
+//  col = pow(clamp(col, .0, 1.0), vec3(0.95));
+//
+//  // vignetting
+//  vec2 q = fragCoord.xy / iResolution.xy;
+//  col *= 0.5 + 0.5 * pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), 0.21);
 
-  // vignetting
-  vec2 q = fragCoord.xy / iResolution.xy;
-  col *= 0.5 + 0.5 * pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), 0.21);
-
-  fragColor = vec4(col, tDepth);
+  // fragColor = vec4(vec3(col.r, col.g, fog), 1.);
+  // fragColor = vec4(vec3(col.r, col.g, fog), 1.);
+  fragColor = vec4(col, fog);
 }
 
 // --------- END-SHADER-TOY-CODE-HERE ------------

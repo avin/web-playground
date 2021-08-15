@@ -24,7 +24,11 @@ layout(location = 0) out vec4 outColor;
 // Smaller = nicer blur, larger = faster
 #define RAD_SCALE 0.5
 
-#define uFar 10.0
+#define uFar 100.0
+
+vec4 readTexture(vec2 coord){
+    return texture(iChannel0, coord).rgba;
+}
 
 float getBlurSize(float depth, float focusPoint, float focusScale) {
   float coc = clamp((1.0 / focusPoint - 1.0 / depth) * focusScale, -1.0, 1.0);
@@ -34,7 +38,7 @@ float getBlurSize(float depth, float focusPoint, float focusScale) {
 vec3 depthOfField(vec2 texCoord, float focusPoint, float focusScale) {
   vec2 iResolution = vec2(resolution_x, resolution_y);
 
-  vec4 Input = texture(iChannel0, texCoord).rgba;
+  vec4 Input = readTexture(texCoord);
   float centerDepth = Input.a * uFar;
   float centerSize = getBlurSize(centerDepth, focusPoint, focusScale);
   vec3 color = Input.rgb;
@@ -46,7 +50,7 @@ vec3 depthOfField(vec2 texCoord, float focusPoint, float focusScale) {
   for (float ang = 0.0; radius < MAX_BLUR_SIZE; ang += GOLDEN_ANGLE) {
     vec2 tc = texCoord + vec2(cos(ang), sin(ang)) * texelSize * radius;
 
-    vec4 sampleInput = texture(iChannel0, tc).rgba;
+    vec4 sampleInput = readTexture(tc);
 
     vec3 sampleColor = sampleInput.rgb;
     float sampleDepth = sampleInput.a * uFar;
@@ -71,7 +75,7 @@ void main() {
   // vec2 fragCoord = gl_FragCoord.xy;
   vec2 uv = vUV;
 
-  vec4 color = texture(iChannel0, uv).rgba;
+  vec4 color;
 
   float focusPoint = 88.0;
   float focusScale = iResolution.y / 15.;
@@ -96,8 +100,6 @@ void main() {
   // Fade in
   col *= smoothstep(0.0, 1.0, iTime);
 
-  color.rgb = col;
-
   // inverse gamma correction
-  outColor = vec4(pow(color.rgb, vec3(1.0 / DISPLAY_GAMMA)), 1.0);
+  outColor = vec4(pow(col, vec3(1.0 / DISPLAY_GAMMA)), 1.0);
 }
