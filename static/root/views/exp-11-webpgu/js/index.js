@@ -205,8 +205,6 @@
             presentationSize,
         );
 
-        renderPassDescriptor.colorAttachments[0].view = swapChainTexture.createView();
-
         const postPassEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
         postPassEncoder.setPipeline(postPipeline);
         postPassEncoder.setBindGroup(0, postBindGroup);
