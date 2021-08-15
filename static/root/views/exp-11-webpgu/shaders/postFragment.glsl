@@ -9,6 +9,7 @@ layout(set = 0, binding = 0) uniform UBO {
 layout(set = 0, binding = 1) uniform sampler baseSampler;
 layout(set = 0, binding = 2) uniform texture2D environmentMap;
 
+layout(location = 0) in vec2 vUV;
 layout(location = 0) out vec4 outColor;
 
 #define iChannel0 sampler2D(environmentMap, baseSampler)
@@ -67,8 +68,8 @@ vec3 depthOfField(vec2 texCoord, float focusPoint, float focusScale) {
 void main() {
 
   vec2 iResolution = vec2(resolution_x, resolution_y);
-  vec2 fragCoord = gl_FragCoord.xy;
-  vec2 uv = fragCoord / iResolution.xy;
+  // vec2 fragCoord = gl_FragCoord.xy;
+  vec2 uv = vUV;
 
   vec4 color = texture(iChannel0, uv).rgba;
 

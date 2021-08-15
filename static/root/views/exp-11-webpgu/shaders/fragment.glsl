@@ -6,6 +6,7 @@ layout(set = 0, binding = 0) uniform UBO {
   float resolution_x;
   float resolution_y;
 };
+layout(location = 0) in vec2 vUV;
 layout(location = 0) out vec4 outColor;
 
 // --------- START-SHADER-TOY-CODE-HERE ------------
@@ -172,7 +173,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec2 iResolution = vec2(resolution_x, resolution_y);
   vec3 iMouse = vec3(mouse_x, mouse_y, 0.);
 
-  vec2 uv = fragCoord.xy / iResolution.xy;
+  vec2 uv = vUV;
 
   vec2 m = vec2(0.00, 0.);
   if (iMouse.z > 0.0) {
