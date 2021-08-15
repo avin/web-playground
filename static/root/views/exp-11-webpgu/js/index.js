@@ -20,19 +20,9 @@
     // const presentationFormat = context.getPreferredFormat(adapter);
     const presentationFormat = 'bgra8unorm';
 
-    // const swapChainFormat = 'bgra8unorm';
-    //
-    // const swapChain = context.configureSwapChain({
-    //     device,
-    //     format: swapChainFormat,
-    // });
-
     const swapChain = context.configureSwapChain({
         device,
         format: presentationFormat,
-
-        // Specify we want both RENDER_ATTACHMENT and COPY_SRC since we
-        // will copy out of the swapchain texture.
         usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
         size: presentationSize,
     });
@@ -79,17 +69,6 @@
                 binding: 0,
                 resource: { buffer },
             },
-            // {
-            //     binding: 1,
-            //     resource: device.createSampler({
-            //         magFilter: 'linear',
-            //         minFilter: 'linear',
-            //     }),
-            // },
-            // {
-            //     binding: 2,
-            //     resource: cubeTexture.createView(),
-            // },
         ],
     });
 
@@ -117,25 +96,6 @@
             topology: 'triangle-list',
         },
     });
-
-    // // Fetch the image and upload it into a GPUTexture.
-    // let cubeTexture;
-    // {
-    //     const img = document.createElement('img');
-    //     img.src = './img/Di-3d.png';
-    //     await img.decode();
-    //     const imageBitmap = await createImageBitmap(img);
-    //
-    //     cubeTexture = device.createTexture({
-    //         size: presentationSize,
-    //         format: 'rgba8unorm',
-    //         usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
-    //     });
-    //     device.queue.copyExternalImageToTexture({ source: imageBitmap }, { texture: cubeTexture }, [
-    //         imageBitmap.width,
-    //         imageBitmap.height,
-    //     ]);
-    // }
 
     const cubeTexture = device.createTexture({
         size: presentationSize,
