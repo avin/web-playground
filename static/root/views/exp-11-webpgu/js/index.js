@@ -275,9 +275,5 @@
     canvas.addEventListener('mouseup', handleMouseUp);
     canvas.addEventListener('mouseleave', handleMouseUp);
 
-    new ResizeObserver(() => {
-
-    }).observe(canvas.parentElement);
-
     requestAnimationFrame(frame);
 })();

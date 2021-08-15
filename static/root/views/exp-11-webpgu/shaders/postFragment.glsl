@@ -20,8 +20,6 @@ layout(location = 0) out vec4 outColor;
 
 #define iChannel0 sampler2D(environmentMap, baseSampler)
 
-// --------- END-SHADER-TOY-CODE-HERE ------------
-
 #define DISPLAY_GAMMA 1.5
 
 #define GOLDEN_ANGLE 2.39996323
