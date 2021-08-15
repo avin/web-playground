@@ -3,6 +3,7 @@ layout(set = 0, binding = 0) uniform UBO {
   float iTime;
   float mouse_x;
   float mouse_y;
+  float mouse_z;
   float resolution_x;
   float resolution_y;
 };
@@ -171,7 +172,7 @@ vec4 trace(vec3 o, vec3 r) {
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
   vec2 iResolution = vec2(resolution_x, resolution_y);
-  vec3 iMouse = vec3(mouse_x, mouse_y, 0.);
+  vec3 iMouse = vec3(mouse_x, mouse_y, mouse_z);
 
   vec2 uv = vUV;
   uv.y = 1. - uv.y;

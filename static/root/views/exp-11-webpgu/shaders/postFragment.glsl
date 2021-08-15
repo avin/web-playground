@@ -3,11 +3,17 @@ layout(set = 0, binding = 0) uniform UBO {
   float iTime;
   float mouse_x;
   float mouse_y;
+  float mouse_z;
   float resolution_x;
   float resolution_y;
 };
 layout(set = 0, binding = 1) uniform sampler baseSampler;
 layout(set = 0, binding = 2) uniform texture2D environmentMap;
+layout(set = 0, binding = 3) uniform UBO2 {
+  float uFar;
+  float radScale;
+  float focusPoint;
+};
 
 layout(location = 0) in vec2 vUV;
 layout(location = 0) out vec4 outColor;
@@ -21,14 +27,7 @@ layout(location = 0) out vec4 outColor;
 #define GOLDEN_ANGLE 2.39996323
 #define MAX_BLUR_SIZE 20.0
 
-// Smaller = nicer blur, larger = faster
-#define RAD_SCALE 0.5
-
-#define uFar 100.0
-
-vec4 readTexture(vec2 coord){
-    return texture(iChannel0, coord).rgba;
-}
+vec4 readTexture(vec2 coord) { return texture(iChannel0, coord).rgba; }
 
 float getBlurSize(float depth, float focusPoint, float focusScale) {
   float coc = clamp((1.0 / focusPoint - 1.0 / depth) * focusScale, -1.0, 1.0);
@@ -46,7 +45,7 @@ vec3 depthOfField(vec2 texCoord, float focusPoint, float focusScale) {
 
   vec2 texelSize = 1.0 / iResolution.xy;
 
-  float radius = RAD_SCALE;
+  float radius = radScale;
   for (float ang = 0.0; radius < MAX_BLUR_SIZE; ang += GOLDEN_ANGLE) {
     vec2 tc = texCoord + vec2(cos(ang), sin(ang)) * texelSize * radius;
 
@@ -63,7 +62,7 @@ vec3 depthOfField(vec2 texCoord, float focusPoint, float focusScale) {
     float m = smoothstep(radius - 0.5, radius + 0.5, sampleSize);
     color += mix(color / tot, sampleColor, m);
     tot += 1.0;
-    radius += RAD_SCALE / radius;
+    radius += radScale / radius;
   }
 
   return color /= tot;
@@ -77,7 +76,7 @@ void main() {
 
   vec4 color;
 
-  float focusPoint = 88.0;
+  // float focusPoint = 88.0;
   float focusScale = iResolution.y / 15.;
 
   color.rgb = depthOfField(uv, focusPoint, focusScale);

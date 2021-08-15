@@ -63,7 +63,12 @@
     // -----------------------
 
     const buffer = device.createBuffer({
-        size: Float32Array.BYTES_PER_ELEMENT * 5,
+        size: Float32Array.BYTES_PER_ELEMENT * 6,
+        usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+    });
+
+    const dofParamsBuffer = device.createBuffer({
+        size: Float32Array.BYTES_PER_ELEMENT * 3,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 
@@ -156,6 +161,10 @@
                 binding: 2,
                 resource: cubeTexture.createView(),
             },
+            {
+                binding: 3,
+                resource: { buffer: dofParamsBuffer },
+            },
         ],
     });
 
@@ -173,8 +182,42 @@
     };
 
     const timeBufferData = new Float32Array([0]);
-    const mouseBufferData = new Float32Array([0, 0]);
+    const mouseBufferData = new Float32Array([0, 0, 0]);
     const resolutionBufferData = new Float32Array([0, 0]);
+
+    const dofParams = {
+        far: 100,
+        radius: 0.5,
+        focusPoint: 88,
+    };
+    const dofParamsBufferData = new Float32Array([dofParams.far, dofParams.radius, dofParams.focusPoint]);
+    const gui = new window.dat.GUI();
+    gui.closed = true;
+    gui.add(dofParams, 'far', 0, 1000)
+        .name('DOF Far')
+        .listen()
+        .onChange((value) => {
+            dofParamsBufferData[0] = value;
+            device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 12);
+        });
+
+    gui.add(dofParams, 'radius', 0, 10)
+        .name('DOF Radius')
+        .listen()
+        .onChange((value) => {
+            dofParamsBufferData[1] = value;
+            device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 12);
+        });
+
+    gui.add(dofParams, 'focusPoint', 0, 200)
+        .name('DOF FocusPoint')
+        .listen()
+        .onChange((value) => {
+            dofParamsBufferData[2] = value;
+            device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 12);
+        });
+
+    device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 12);
 
     function frame(timestamp) {
         timeBufferData[0] = timestamp / 1000;
@@ -220,14 +263,26 @@
 
         mouseBufferData[0] = x;
         mouseBufferData[1] = y;
-        device.queue.writeBuffer(buffer, 4, mouseBufferData.buffer, 0, 8);
+        device.queue.writeBuffer(buffer, 4, mouseBufferData.buffer, 0, 12);
     });
+
+    canvas.addEventListener('mousedown', () => {
+        mouseBufferData[2] = 1;
+        device.queue.writeBuffer(buffer, 4, mouseBufferData.buffer, 0, 12);
+    });
+
+    const handleMouseUp = () => {
+        mouseBufferData[2] = 0;
+        device.queue.writeBuffer(buffer, 4, mouseBufferData.buffer, 0, 12);
+    };
+    canvas.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener('mouseleave', handleMouseUp);
 
     new ResizeObserver(() => {
         const { width, height } = canvas.parentElement.getBoundingClientRect();
         resolutionBufferData[0] = width;
         resolutionBufferData[1] = height;
-        device.queue.writeBuffer(buffer, 12, resolutionBufferData.buffer, 0, 8);
+        device.queue.writeBuffer(buffer, 16, resolutionBufferData.buffer, 0, 8);
 
         Object.assign(canvas, { width, height });
     }).observe(canvas.parentElement);
