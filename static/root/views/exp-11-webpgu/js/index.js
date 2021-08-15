@@ -6,7 +6,7 @@
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
-    const context = canvas.getContext('webgpu');
+    const context = canvas.getContext('gpupresent');
 
     if (!context || !navigator.gpu) {
         throw new Error('WebGPU does not work');
@@ -17,7 +17,8 @@
 
     const devicePixelRatio = window.devicePixelRatio || 1;
     const presentationSize = [canvas.clientWidth * devicePixelRatio, canvas.clientHeight * devicePixelRatio];
-    const presentationFormat = context.getPreferredFormat(adapter);
+    // const presentationFormat = context.getPreferredFormat(adapter);
+    const presentationFormat = 'bgra8unorm';
 
     // const swapChainFormat = 'bgra8unorm';
     //
@@ -26,7 +27,7 @@
     //     format: swapChainFormat,
     // });
 
-    context.configure({
+    const swapChain = context.configureSwapChain({
         device,
         format: presentationFormat,
 
@@ -179,7 +180,7 @@
         timeBufferData[0] = timestamp / 1000;
         device.queue.writeBuffer(buffer, 0, timeBufferData.buffer, 0, 4);
 
-        const swapChainTexture = context.getCurrentTexture();
+        const swapChainTexture = swapChain.getCurrentTexture();
         renderPassDescriptor.colorAttachments[0].view = swapChainTexture.createView();
 
         const commandEncoder = device.createCommandEncoder();
