@@ -54,12 +54,12 @@
     // -----------------------
 
     const buffer = device.createBuffer({
-        size: Float32Array.BYTES_PER_ELEMENT * 7,
+        size: Float32Array.BYTES_PER_ELEMENT * 8,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 
     const dofParamsBuffer = device.createBuffer({
-        size: Float32Array.BYTES_PER_ELEMENT * 3,
+        size: Float32Array.BYTES_PER_ELEMENT * 4,
         usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
     });
 
@@ -115,19 +115,19 @@
     const resolutionBufferData = new Float32Array([0, 0]);
 
 
-    const fovParams = {
+    const params = {
         fov: .77,
+        dofFar: 100,
+        dofRadius: 1.0,
+        dofFocusPoint: 88,
+        noiseFactor: .25,
     };
-    const fovBufferData = new Float32Array([fovParams.fov]);
-    const dofParams = {
-        far: 100,
-        radius: 1.0,
-        focusPoint: 88,
-    };
-    const dofParamsBufferData = new Float32Array([dofParams.far, dofParams.radius, dofParams.focusPoint]);
+    const fovBufferData = new Float32Array([params.fov]);
+    const dofParamsBufferData = new Float32Array([params.dofFar, params.dofRadius, params.dofFocusPoint, params.dofNoiseFactor]);
+    const noiseFactorBufferData = new Float32Array([params.noiseFactor]);
     const gui = new window.dat.GUI();
     gui.closed = true;
-    gui.add(fovParams, 'fov', .5, 1.5)
+    gui.add(params, 'fov', .5, 1.5)
         .name('FOV')
         .listen()
         .onChange((value) => {
@@ -136,31 +136,39 @@
         });
     device.queue.writeBuffer(buffer, 24, fovBufferData.buffer, 0, 4);
 
-    gui.add(dofParams, 'far', 0, 1000)
+    gui.add(params, 'dofFar', 0, 1000)
         .name('DOF Far')
         .listen()
         .onChange((value) => {
             dofParamsBufferData[0] = value;
-            device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 12);
+            device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 16);
         });
 
-    gui.add(dofParams, 'radius', 0, 10)
+    gui.add(params, 'dofRadius', 0, 10)
         .name('DOF Radius')
         .listen()
         .onChange((value) => {
             dofParamsBufferData[1] = value;
-            device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 12);
+            device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 16);
         });
 
-    gui.add(dofParams, 'focusPoint', 0, 200)
+    gui.add(params, 'dofFocusPoint', 0, 200)
         .name('DOF FocusPoint')
         .listen()
         .onChange((value) => {
             dofParamsBufferData[2] = value;
-            device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 12);
+            device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 16);
         });
+    gui.add(params, 'noiseFactor', 0, 1.)
+        .name('DOF Smooth')
+        .listen()
+        .onChange((value) => {
+            noiseFactorBufferData[0] = value;
+            device.queue.writeBuffer(buffer, 28, noiseFactorBufferData.buffer, 0, 4);
+        });
+    device.queue.writeBuffer(buffer, 28, noiseFactorBufferData.buffer, 0, 4);
 
-    device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 12);
+    device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 16);
 
     let cubeTexture;
     let postBindGroup;

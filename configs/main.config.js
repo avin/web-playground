@@ -157,6 +157,10 @@ module.exports = {
         return defaultFileBuildProcessing(params);
     },
 
+    beforeBuild() {
+        fs.removeSync(this.buildPath);
+    },
+
     afterBuild() {
         // Process tags with links to files and substitute prefixes with hashes for links
         getFilesList('./build')

@@ -7,6 +7,7 @@ layout(set = 0, binding = 0) uniform UBO {
   float resolution_x;
   float resolution_y;
   float fov;
+  float noiseFactor;
 };
 layout(location = 0) in vec2 vUV;
 layout(location = 0) out vec4 outColor;
@@ -209,7 +210,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
 
   // SOFT DOF
-  fog += Hash3d(vec3(vUV, iTime*.01))*.75;
+  fog += Hash3d(vec3(vUV, iTime*.01))*noiseFactor;
 
   fragColor = vec4(col, fog);
 }
