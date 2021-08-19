@@ -77,6 +77,7 @@ function generateWebpackConfig({
     plugins: [],
     performance: false,
     resolve: {
+      extensions: ['.tsx', '.ts', '.js'],
       alias: {
         '@': path.resolve(process.cwd(), `static`),
         react: 'preact/compat',
