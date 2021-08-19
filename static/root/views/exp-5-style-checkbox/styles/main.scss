@@ -3,19 +3,19 @@
 @import 'static/_common/styles/colors.scss';
 
 body {
-    margin: 0;
-    font-family: sans-serif;
-    background-color: $light-gray3;
-    font-size: 16px;
-    user-select: none;
+  margin: 0;
+  font-family: sans-serif;
+  background-color: $light-gray3;
+  font-size: 16px;
+  user-select: none;
 }
 
 .container {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .list {
@@ -23,64 +23,64 @@ body {
 
 $checkboxSize: 20px;
 %decor-line {
-    width: ($checkboxSize - 2);
-    height: 2px;
-    background-color: $dark-gray3;
-    content: '';
-    position: absolute;
-    top: ($checkboxSize / 2 - 2);
+  width: ($checkboxSize - 2);
+  height: 2px;
+  background-color: $dark-gray3;
+  content: '';
+  position: absolute;
+  top: ($checkboxSize / 2 - 2);
 
-    transition: 0.2s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: 0.2s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 }
 
 .list__item {
-    label {
-        cursor: pointer;
+  label {
+    cursor: pointer;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  .list__checkbox {
+    display: none;
+  }
+
+  .list__checkbox + .list__checkbox-decor {
+    content: '';
+    width: $checkboxSize;
+    height: $checkboxSize;
+    display: inline-block;
+    background-color: $light-gray5;
+    border: 1px solid $gray3;
+    vertical-align: middle;
+    margin-right: 5px;
+    position: relative;
+
+    &:before {
+      @extend %decor-line;
+      transform: scale(0) rotate(45deg);
     }
-
-    * {
-        box-sizing: border-box;
+    &:after {
+      @extend %decor-line;
+      transform: scale(0) rotate(-45deg);
     }
+  }
 
-    &:not(:last-child) {
-        margin-bottom: 10px;
+  .list__checkbox:checked + .list__checkbox-decor {
+    &:before {
+      @extend %decor-line;
+
+      transform: scale(1) rotate(45deg);
     }
+    &:after {
+      @extend %decor-line;
 
-    .list__checkbox {
-        display: none;
+      transform: scale(1) rotate(-45deg);
     }
-
-    .list__checkbox + .list__checkbox-decor {
-        content: '';
-        width: $checkboxSize;
-        height: $checkboxSize;
-        display: inline-block;
-        background-color: $light-gray5;
-        border: 1px solid $gray3;
-        vertical-align: middle;
-        margin-right: 5px;
-        position: relative;
-
-        &:before {
-            @extend %decor-line;
-            transform: scale(0) rotate(45deg);
-        }
-        &:after {
-            @extend %decor-line;
-            transform: scale(0) rotate(-45deg);
-        }
-    }
-
-    .list__checkbox:checked + .list__checkbox-decor {
-        &:before {
-            @extend %decor-line;
-
-            transform: scale(1) rotate(45deg);
-        }
-        &:after {
-            @extend %decor-line;
-
-            transform: scale(1) rotate(-45deg);
-        }
-    }
+  }
 }

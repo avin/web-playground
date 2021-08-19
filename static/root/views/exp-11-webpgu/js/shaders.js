@@ -1,11 +1,17 @@
 // @process
 
-import fragment from '../shaders/fragment.glsl';
-import postFragment from '../shaders/postFragment.glsl';
-import vertex from '../shaders/vertex.glsl';
+import fragment from '../shaders/fragment.code';
+import postFragment from '../shaders/postFragment.code';
+import vertex from '../shaders/vertex.code';
+
+function stringToBuffer(str) {
+  const arr = str.split(',');
+  const view = new Uint32Array(arr);
+  return view;
+}
 
 window.SHADERS = {
-    fragment,
-    postFragment,
-    vertex,
+  fragment: stringToBuffer(fragment),
+  postFragment: stringToBuffer(postFragment),
+  vertex: stringToBuffer(vertex),
 };

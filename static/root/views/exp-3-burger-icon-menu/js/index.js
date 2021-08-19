@@ -3,6 +3,6 @@
 import $ from 'jquery';
 
 $('.menu').on('click', function (e) {
-    e.preventDefault();
-    $(this).toggleClass('menu_active');
+  e.preventDefault();
+  $(this).toggleClass('menu_active');
 });
