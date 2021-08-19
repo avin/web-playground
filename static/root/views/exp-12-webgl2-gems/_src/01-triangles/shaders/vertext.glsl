@@ -7,6 +7,8 @@ in vec4 a_position;
 uniform float time;
 uniform float speed;
 
+out vec4 v_color;
+
 void rotate(in float angle, inout vec2 uv) {
   float ca = cos(angle);
   float sa = sin(angle);
@@ -21,4 +23,6 @@ void main() {
   rotate(time * speed, pos);
 
   gl_Position = vec4(pos, 0., 1.);
+
+  v_color = gl_Position * .5 + .5;
 }

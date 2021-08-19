@@ -8,7 +8,7 @@ export const createShader = (gl: WebGL2RenderingContext, type: number, source: s
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
     // gl.deleteShader(shader);
-    throw new Error(gl.getShaderInfoLog(shader) || 'Compile shader fail');
+    throw new Error(`could not compile shader: ${gl.getShaderInfoLog(shader) || ''}`);
   }
 
   return shader;
@@ -29,7 +29,7 @@ export const createProgram = (
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     // gl.deleteProgram(program);
-    throw new Error(gl.getProgramInfoLog(program) || 'Create program fail');
+    throw new Error(`program failed to link:${gl.getProgramInfoLog(program) || ''}`);
   }
 
   return program;

@@ -21,6 +21,7 @@ const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
 const triColorLoc = gl.getUniformLocation(program, 'triColor');
 const timeLoc = gl.getUniformLocation(program, 'time');
 const speedLoc = gl.getUniformLocation(program, 'speed');
+const useVColorLoc = gl.getUniformLocation(program, 'useVColor');
 
 const vao1 = gl.createVertexArray();
 gl.bindVertexArray(vao1);
@@ -91,6 +92,7 @@ const startTime = +new Date();
   gl.bindVertexArray(vao1);
 
   gl.uniform1f(speedLoc, 1);
+  gl.uniform1f(useVColorLoc, 0);
 
   gl.uniform3fv(triColorLoc, [1, 0.7, 0.7]);
 
@@ -104,6 +106,7 @@ const startTime = +new Date();
   gl.bindVertexArray(vao2);
 
   gl.uniform1f(speedLoc, 2);
+  gl.uniform1f(useVColorLoc, 1);
 
   gl.uniform3fv(triColorLoc, [0.5, 1.0, 0.7]);
 
