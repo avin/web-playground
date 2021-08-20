@@ -38,15 +38,13 @@ vec3 getCol2(vec2 uv) {
 }
 
 void main() {
-  //  vec3 col2 = texture(u_image2, v_texCoord).rgb;
-  //
-  //
-
   float s = sin(u_time) * .6 + .5;
   float f = smoothstep(-.1 + s, .1 + s, v_texCoord.x);
 
-  vec3 col1 = getCol1(v_texCoord);
-  vec3 col2 = getCol2(v_texCoord);
+  vec2 uv = v_texCoord;
+
+  vec3 col1 = getCol1(uv);
+  vec3 col2 = getCol2(uv);
 
   vec3 col = mix(col1, col2, f);
 
