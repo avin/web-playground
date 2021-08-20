@@ -3,10 +3,10 @@ import { createProgram, createShader, resizeCanvasToDisplaySize } from '../utils
 import fragmentShaderSource from './shaders/fragment.glsl';
 import vertexShaderSource from './shaders/vertext.glsl';
 
-const loadImage = () => {
+const loadImage = (url) => {
   return new Promise((resolve) => {
     const image = new Image();
-    image.src = './img/Di-3d.png';
+    image.src = url;
     image.onload = () => {
       resolve(image);
     };
@@ -14,7 +14,7 @@ const loadImage = () => {
 };
 
 void (async () => {
-  const image = (await loadImage()) as ImageBitmap;
+  const images = await Promise.all([loadImage('./img/Di-3d.png'), loadImage('./img/leaves.jpg')]);
 
   const canvas: HTMLCanvasElement | null = document.querySelector('#canvas');
   if (!canvas) {
@@ -34,27 +34,35 @@ void (async () => {
   const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
   const texCoordAttributeLocation = gl.getAttribLocation(program, 'a_texCoord');
 
-  const imageLocation = gl.getUniformLocation(program, 'u_image');
+  const image1Location = gl.getUniformLocation(program, 'u_image1');
+  const image2Location = gl.getUniformLocation(program, 'u_image2');
   const timeLocation = gl.getUniformLocation(program, 'u_time');
 
-  const texture = gl.createTexture();
+  const createTexture = (textureIndex: number, image: ImageBitmap) => {
+    const texture = gl.createTexture();
 
-  gl.activeTexture(gl.TEXTURE0 + 0);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.activeTexture(gl.TEXTURE0 + textureIndex);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
 
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-  gl.texImage2D(
-    gl.TEXTURE_2D,
-    0, // mipLevel,
-    gl.RGBA, // internalFormat,
-    gl.RGBA, // srcFormat,
-    gl.UNSIGNED_BYTE, // srcType,
-    image,
-  );
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      0, // mipLevel,
+      gl.RGBA, // internalFormat,
+      gl.RGBA, // srcFormat,
+      gl.UNSIGNED_BYTE, // srcType,
+      image,
+    );
+
+    return texture;
+  };
+
+  const texture1 = createTexture(0, images[0] as ImageBitmap);
+  const texture2 = createTexture(1, images[1] as ImageBitmap);
 
   const vao1 = gl.createVertexArray();
   gl.bindVertexArray(vao1);
@@ -244,7 +252,14 @@ void (async () => {
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
 
-    gl.uniform1i(imageLocation, 0);
+    gl.uniform1i(image1Location, 0);
+    gl.uniform1i(image2Location, 1);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture1);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, texture2);
+
     gl.uniform1f(timeLocation, time);
 
     // Bind the attribute/buffer set we want.
