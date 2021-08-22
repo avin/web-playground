@@ -20,7 +20,8 @@ void (() => {
   }
 
   gl.enable(gl.BLEND);
-  gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  // gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
   // gl.blendFuncSeparate( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE );
 
   const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -29,14 +30,13 @@ void (() => {
   const program = createProgram(gl, vertexShader, fragmentShader);
 
   const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
+  const uvAttributeLocation = gl.getAttribLocation(program, 'a_uv');
   const offsetAttributeLocation = gl.getAttribLocation(program, 'a_offset');
-  const colorAttributeLocation = gl.getAttribLocation(program, 'a_color');
-  const speedAttributeLocation = gl.getAttribLocation(program, 'a_speed');
 
   const timeLocation = gl.getUniformLocation(program, 'u_time');
   const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
 
-  const numInstances = 5000;
+  const numInstances = 10000;
 
   const offsetData = new Float32Array(numInstances * 2);
   const rotationData = new Float32Array(numInstances * 1);
@@ -79,7 +79,7 @@ void (() => {
   {
     /* ======== POSITION ========= */
 
-    const size = 0.025;
+    const size = 0.075;
     /* prettier-ignore */
     const positions = new Float32Array([
       -size, -size,
@@ -93,6 +93,28 @@ void (() => {
     gl.enableVertexAttribArray(positionAttributeLocation);
     gl.vertexAttribPointer(
       positionAttributeLocation,
+      2, // size - 2 components per iteration
+      gl.FLOAT, // type - the data is 32bit floats
+      false, // normalize - don't normalize the data
+      0, // stride  - 0 = move forward size * sizeof(type) each iteration to get the next position
+      0, // offset - start at the beginning of the buffer
+    );
+
+    /* ======== UV ========= */
+
+    /* prettier-ignore */
+    const uvBufferData = new Float32Array([
+      0, 0,
+      1, 0,
+      1, 1,
+      0, 1,
+    ]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, uvBufferData, gl.STATIC_DRAW);
+
+    gl.enableVertexAttribArray(uvAttributeLocation);
+    gl.vertexAttribPointer(
+      uvAttributeLocation,
       2, // size - 2 components per iteration
       gl.FLOAT, // type - the data is 32bit floats
       false, // normalize - don't normalize the data
@@ -120,26 +142,6 @@ void (() => {
     gl.vertexAttribPointer(offsetAttributeLocation, 2, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(offsetAttributeLocation, 1);
 
-    /* ======== COLORS ========= */
-
-    const colorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, colorData, gl.STATIC_DRAW);
-
-    gl.enableVertexAttribArray(colorAttributeLocation);
-    gl.vertexAttribPointer(colorAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-    gl.vertexAttribDivisor(colorAttributeLocation, 1);
-
-    /* ======== SPEEDS ========= */
-
-    const speedBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, speedBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, speedData, gl.STATIC_DRAW);
-
-    gl.enableVertexAttribArray(speedAttributeLocation);
-    gl.vertexAttribPointer(speedAttributeLocation, 1, gl.FLOAT, false, 0, 0);
-    gl.vertexAttribDivisor(speedAttributeLocation, 1);
-
     /* ======== CLEAN ========= */
 
     gl.bindVertexArray(null);
@@ -159,9 +161,8 @@ void (() => {
     }
 
     // Clear the canvas
-    gl.clearColor(1, 1, 1, 1);
+    gl.clearColor(0, 0, 0, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Tell it to use our program (pair of shaders)
     gl.useProgram(program);
@@ -180,13 +181,6 @@ void (() => {
     );
 
     gl.bindVertexArray(null);
-
-    // gl.drawElements(
-    //   gl.TRIANGLES, // primitiveType
-    //   6, // count
-    //   gl.UNSIGNED_SHORT, // indexType
-    //   0, // offset
-    // );
 
     stats.end();
     requestAnimationFrame(frame);

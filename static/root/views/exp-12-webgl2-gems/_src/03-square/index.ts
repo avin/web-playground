@@ -37,6 +37,7 @@ void (async () => {
   const image1Location = gl.getUniformLocation(program, 'u_image1');
   const image2Location = gl.getUniformLocation(program, 'u_image2');
   const timeLocation = gl.getUniformLocation(program, 'u_time');
+  const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
 
   const createTexture = (textureIndex: number, image: ImageBitmap) => {
     const texture = gl.createTexture();
@@ -261,6 +262,7 @@ void (async () => {
     gl.bindTexture(gl.TEXTURE_2D, texture2);
 
     gl.uniform1f(timeLocation, time);
+    gl.uniform2fv(resolutionLocation, [gl.canvas.width, gl.canvas.height]);
 
     // Bind the attribute/buffer set we want.
     gl.bindVertexArray(vao1);
