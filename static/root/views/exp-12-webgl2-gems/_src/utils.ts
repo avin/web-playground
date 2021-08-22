@@ -35,6 +35,48 @@ export const createProgram = (
   return program;
 };
 
+export const createAndSetupTexture = (gl: WebGL2RenderingContext): WebGLTexture => {
+  const texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  // Set up texture so we can render any size image and so we are
+  // working with pixels.
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+  if (texture === null) {
+    throw new Error('texture create fail');
+  }
+
+  return texture;
+};
+
+export const setCanvasSizeForTexture = (gl: WebGL2RenderingContext, texture: WebGLTexture): void => {
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  {
+    // make the texture the same size as the image
+    const mipLevel = 0; // the largest mip
+    const internalFormat = gl.RGBA; // format we want in the texture
+    const border = 0; // must be 0
+    const srcFormat = gl.RGBA; // format of data we are supplying
+    const srcType = gl.UNSIGNED_BYTE; // type of data we are supplying
+    const data = null; // no data = create a blank texture
+    gl.texImage2D(
+      gl.TEXTURE_2D,
+      mipLevel,
+      internalFormat,
+      gl.canvas.width,
+      gl.canvas.height,
+      border,
+      srcFormat,
+      srcType,
+      data,
+    );
+  }
+};
+
 export const resizeCanvasToDisplaySize = (canvas: HTMLCanvasElement): boolean => {
   // Lookup the size the browser is displaying the canvas in CSS pixels.
   const displayWidth = canvas.clientWidth;
