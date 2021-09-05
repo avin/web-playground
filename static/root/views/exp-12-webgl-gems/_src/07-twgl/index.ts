@@ -30,6 +30,7 @@ void (() => {
     ]},
   };
   const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
+  twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
 
   function render(time) {
     twgl.resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
@@ -41,7 +42,7 @@ void (() => {
     };
 
     gl.useProgram(programInfo.program);
-    twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
+
     twgl.setUniforms(programInfo, uniforms);
     twgl.drawBufferInfo(gl, bufferInfo);
 
