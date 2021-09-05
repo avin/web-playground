@@ -32,8 +32,11 @@ uniform vec2 iResolution;
 // --------- START-SHADER-TOY-CODE-HERE ------------
 // Based on https://www.shadertoy.com/view/Wts3DB
 
+// Кол-во полосок
 #define COUNT 20.
+// Переливающийся цвет (1/0)
 #define DYNAMIC 1
+// Цвет фона
 #define COL_BLACK vec3(23,32,38) / 255.0
 
 #define SF 1./min(iResolution.x,iResolution.y)
@@ -111,14 +114,15 @@ void main(void){
 
         const canvas = document.querySelector('#canvas');
         const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        const devicePixelRatio = window.devicePixelRatio || 1;
 
         const resizeCanvasToDisplaySize = (canvas) => {
           const displayWidth = canvas.clientWidth;
           const displayHeight = canvas.clientHeight;
 
           if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
-            canvas.width = displayWidth;
-            canvas.height = displayHeight;
+            canvas.width = displayWidth * devicePixelRatio;
+            canvas.height = displayHeight * devicePixelRatio;
 
             gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
           }
@@ -155,8 +159,8 @@ void main(void){
           gl.uniform1f(gl.getUniformLocation(program, 'iTime'), time / 1000);
           gl.uniform2f(
             gl.getUniformLocation(program, 'iResolution'),
-            document.body.clientWidth,
-            document.body.clientHeight,
+            document.body.clientWidth * devicePixelRatio,
+            document.body.clientHeight * devicePixelRatio,
           );
           gl.drawArrays(gl.TRIANGLES, 0, 6);
 
