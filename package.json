@@ -94,7 +94,7 @@
     "mocker-api": "1.11.2",
     "multi-static": "0.1.11",
     "mustache": "4.2.0",
-    "node-sass": "4.12.0",
+    "node-sass": "7.0.0",
     "npm-install-subfolders": "0.1.2",
     "postcss": "8.3.5",
     "postcss-flexbugs-fixes": "5.0.2",
