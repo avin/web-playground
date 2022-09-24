@@ -1,4 +1,4 @@
-# Web-Playground [![Build Status](https://travis-ci.org/avin/web-playground.svg?branch=master)](https://travis-ci.org/avin/web-playground)
+# Web-Playground ![build status](https://github.com/avin/web-playground/actions/workflows/publish.yml/badge.svg)
 
 HTML/CSS/JS experiments
 
