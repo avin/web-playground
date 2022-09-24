@@ -1,0 +1,7 @@
+{
+  "name": "page",
+  "version": "0.0.1",
+  "dependencies": {
+    "jquery": "3.6.1"
+  }
+}
