@@ -40,30 +40,6 @@ const jsEsbuildTransformer = {
           target: 'es2015',
           minify: mode === 'build',
           logLevel: 'silent',
-          banner: {
-            js: `(() => new EventSource("/esbuild?srcPath=${encodeURIComponent(
-              file.srcPath,
-            )}").onmessage = () => location.reload())();`,
-          },
-          watch: {
-            onRebuild(error, buildResult) {
-              if (error) {
-                console.log('ESBuild:', error);
-                return;
-              }
-
-              cache[file.srcPath] = buildResult.outputFiles[0].text;
-
-              if (clients[file.srcPath]) {
-                clients[file.srcPath].forEach((res) => {
-                  res.write('data: update\n\n');
-                });
-                clients[file.srcPath].length = 0;
-              }
-
-              console.log('ESBuild: code rebuilt successfully');
-            },
-          },
           define: {
             'process.env.NODE_ENV':
               mode === 'build' ? '"production"' : '"development"',
@@ -76,6 +52,32 @@ const jsEsbuildTransformer = {
               filter: /^raw:/,
             }),
           ],
+          ...(mode === 'dev' && {
+            banner: {
+              js: `(() => new EventSource("/esbuild?srcPath=${encodeURIComponent(
+                file.srcPath,
+              )}").onmessage = () => location.reload())();`,
+            },
+            watch: {
+              onRebuild(error, buildResult) {
+                if (error) {
+                  console.log('ESBuild:', error);
+                  return;
+                }
+
+                cache[file.srcPath] = buildResult.outputFiles[0].text;
+
+                if (clients[file.srcPath]) {
+                  clients[file.srcPath].forEach((res) => {
+                    res.write('data: update\n\n');
+                  });
+                  clients[file.srcPath].length = 0;
+                }
+
+                console.log('ESBuild: code rebuilt successfully');
+              },
+            },
+          }),
         });
 
         cache[file.srcPath] = buildResult.outputFiles[0].text;
