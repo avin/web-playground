@@ -9,7 +9,7 @@ HTML/CSS/JS experiments
 ## Dev
 
 ```sh
-npm run dev
+yarn run dev
 ```
 
 Then go to `https://localhost:3003/index.html`
