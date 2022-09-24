@@ -1,8 +1,8 @@
 // @process
 
-import fragment from '../shaders/fragment.code';
-import postFragment from '../shaders/postFragment.code';
-import vertex from '../shaders/vertex.code';
+import fragment from 'raw:../shaders/fragment.code';
+import postFragment from 'raw:../shaders/postFragment.code';
+import vertex from 'raw:../shaders/vertex.code';
 
 function stringToBuffer(str) {
   const arr = str.split(',');

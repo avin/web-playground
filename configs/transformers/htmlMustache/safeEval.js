@@ -6,7 +6,7 @@ function safeEval(code, scopeVariables = {}) {
 
     result = executionFunc(...Object.values(scopeVariables));
   } catch (e) {
-    console.warn(e);
+    console.log(e);
   }
 
   return result;

@@ -1,5 +1,6 @@
 // @process
 
+@use 'sass:math';
 @import 'static/_common/styles/colors.scss';
 
 body,
@@ -40,8 +41,8 @@ body {
     background-color: white;
     position: absolute;
     z-index: 1;
-    top: #{-$size/2};
-    left: #{-$size/2};
+    top: #{math.div(-$size, 2)};
+    left: #{math.div(-$size, 2)};
     cursor: pointer;
   }
 
@@ -50,13 +51,13 @@ body {
 
     &_left {
       left: 0;
-      bottom: 0%;
+      bottom: 0;
       transform: translateX(-50%);
     }
 
     &_right {
       right: 0;
-      bottom: 0%;
+      bottom: 0;
       transform: translateX(50%);
     }
   }

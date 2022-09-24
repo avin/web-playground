@@ -32,11 +32,18 @@ const mustacheProcessFile = (fileSrc, customOptions = {}, originalFileSrc) => {
      */
     chunk: () => {
       return (text, render) => {
-        const chunkLocation = fileSrc.split(path.sep).slice(0, -1).join(path.sep);
+        const chunkLocation = fileSrc
+          .split(path.sep)
+          .slice(0, -1)
+          .join(path.sep);
         const chunkFile = path.join(chunkLocation, text);
         let chunkContent;
         try {
-          chunkContent = mustacheProcessFile(chunkFile, customOptions, originalFileSrc || fileSrc);
+          chunkContent = mustacheProcessFile(
+            chunkFile,
+            customOptions,
+            originalFileSrc || fileSrc,
+          );
         } catch (e) {
           console.warn(`(!) Chunk read error. ${chunkFile}`);
         }
