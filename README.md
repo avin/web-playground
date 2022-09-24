@@ -12,7 +12,7 @@ HTML/CSS/JS experiments
 yarn run dev
 ```
 
-Then go to `https://localhost:3003/index.html`
+Open `https://localhost:8080/index.html`
 
 # Useful resources
 
