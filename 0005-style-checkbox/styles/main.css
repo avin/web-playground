@@ -1,0 +1,61 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #e1e8ed;
+  font-size: 16px;
+  user-select: none;
+}
+
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.list__item .list__checkbox:checked + .list__checkbox-decor:after, .list__item .list__checkbox:checked + .list__checkbox-decor:before, .list__item .list__checkbox + .list__checkbox-decor:after, .list__item .list__checkbox + .list__checkbox-decor:before {
+  width: 18px;
+  height: 2px;
+  background-color: #293742;
+  content: "";
+  position: absolute;
+  top: 8px;
+  transition: 0.2s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}
+
+.list__item label {
+  cursor: pointer;
+}
+.list__item * {
+  box-sizing: border-box;
+}
+.list__item:not(:last-child) {
+  margin-bottom: 10px;
+}
+.list__item .list__checkbox {
+  display: none;
+}
+.list__item .list__checkbox + .list__checkbox-decor {
+  content: "";
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  background-color: #f5f8fa;
+  border: 1px solid #8a9ba8;
+  vertical-align: middle;
+  margin-right: 5px;
+  position: relative;
+}
+.list__item .list__checkbox + .list__checkbox-decor:before {
+  transform: scale(0) rotate(45deg);
+}
+.list__item .list__checkbox + .list__checkbox-decor:after {
+  transform: scale(0) rotate(-45deg);
+}
+.list__item .list__checkbox:checked + .list__checkbox-decor:before {
+  transform: scale(1) rotate(45deg);
+}
+.list__item .list__checkbox:checked + .list__checkbox-decor:after {
+  transform: scale(1) rotate(-45deg);
+}
