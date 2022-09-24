@@ -113,14 +113,18 @@ void main(void){
 `;
 
         const canvas = document.querySelector('#canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        const gl =
+          canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
         const devicePixelRatio = window.devicePixelRatio || 1;
 
         const resizeCanvasToDisplaySize = (canvas) => {
           const displayWidth = canvas.clientWidth;
           const displayHeight = canvas.clientHeight;
 
-          if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+          if (
+            canvas.width !== displayWidth ||
+            canvas.height !== displayHeight
+          ) {
             canvas.width = displayWidth * devicePixelRatio;
             canvas.height = displayHeight * devicePixelRatio;
 
@@ -131,7 +135,11 @@ void main(void){
         const vertices = [-1, -1, -1, 1, 1, -1, 1, 1, -1, 1, 1, -1];
         const buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          new Float32Array(vertices),
+          gl.STATIC_DRAW,
+        );
 
         const vertexShader = gl.createShader(gl.VERTEX_SHADER);
         gl.shaderSource(vertexShader, vertexShaderSrc);
@@ -141,7 +149,11 @@ void main(void){
         gl.shaderSource(pixelShader, fragmentShaderSrc);
         gl.compileShader(pixelShader);
         if (!gl.getShaderParameter(pixelShader, gl.COMPILE_STATUS)) {
-          throw new Error(`could not compile shader: ${gl.getShaderInfoLog(pixelShader) || ''}`);
+          throw new Error(
+            `could not compile shader: ${
+              gl.getShaderInfoLog(pixelShader) || ''
+            }`,
+          );
         }
 
         const program = gl.createProgram();

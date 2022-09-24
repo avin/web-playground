@@ -1,4 +1,8 @@
-export const createShader = (gl: WebGL2RenderingContext, type: number, source: string): WebGLShader => {
+export const createShader = (
+  gl: WebGL2RenderingContext,
+  type: number,
+  source: string,
+): WebGLShader => {
   const shader = gl.createShader(type);
   if (!shader) {
     throw new Error('createShader failed');
@@ -8,7 +12,9 @@ export const createShader = (gl: WebGL2RenderingContext, type: number, source: s
   gl.compileShader(shader);
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
     // gl.deleteShader(shader);
-    throw new Error(`could not compile shader: ${gl.getShaderInfoLog(shader) || ''}`);
+    throw new Error(
+      `could not compile shader: ${gl.getShaderInfoLog(shader) || ''}`,
+    );
   }
 
   return shader;
@@ -29,13 +35,17 @@ export const createProgram = (
   gl.linkProgram(program);
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     // gl.deleteProgram(program);
-    throw new Error(`program failed to link:${gl.getProgramInfoLog(program) || ''}`);
+    throw new Error(
+      `program failed to link:${gl.getProgramInfoLog(program) || ''}`,
+    );
   }
 
   return program;
 };
 
-export const createAndSetupTexture = (gl: WebGL2RenderingContext): WebGLTexture => {
+export const createAndSetupTexture = (
+  gl: WebGL2RenderingContext,
+): WebGLTexture => {
   const texture = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -53,7 +63,10 @@ export const createAndSetupTexture = (gl: WebGL2RenderingContext): WebGLTexture 
   return texture;
 };
 
-export const setCanvasSizeForTexture = (gl: WebGL2RenderingContext, texture: WebGLTexture): void => {
+export const setCanvasSizeForTexture = (
+  gl: WebGL2RenderingContext,
+  texture: WebGLTexture,
+): void => {
   gl.bindTexture(gl.TEXTURE_2D, texture);
   {
     // make the texture the same size as the image
@@ -77,13 +90,16 @@ export const setCanvasSizeForTexture = (gl: WebGL2RenderingContext, texture: Web
   }
 };
 
-export const resizeCanvasToDisplaySize = (canvas: HTMLCanvasElement): boolean => {
+export const resizeCanvasToDisplaySize = (
+  canvas: HTMLCanvasElement,
+): boolean => {
   // Lookup the size the browser is displaying the canvas in CSS pixels.
   const displayWidth = canvas.clientWidth;
   const displayHeight = canvas.clientHeight;
 
   // Check if the canvas is not the same size.
-  const needResize = canvas.width !== displayWidth || canvas.height !== displayHeight;
+  const needResize =
+    canvas.width !== displayWidth || canvas.height !== displayHeight;
 
   if (needResize) {
     // Make the canvas the same size

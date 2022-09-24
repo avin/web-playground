@@ -1,4 +1,8 @@
-import { createProgram, createShader, resizeCanvasToDisplaySize } from '../utils';
+import {
+  createProgram,
+  createShader,
+  resizeCanvasToDisplaySize,
+} from '../utils';
 
 import fragmentShaderSource from './shaders/fragment.glsl';
 import vertexShaderSource from './shaders/vertext.glsl';
@@ -25,7 +29,11 @@ void (() => {
   // gl.blendFuncSeparate( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE );
 
   const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+  const fragmentShader = createShader(
+    gl,
+    gl.FRAGMENT_SHADER,
+    fragmentShaderSource,
+  );
 
   const program = createProgram(gl, vertexShader, fragmentShader);
 
@@ -130,7 +138,11 @@ void (() => {
       3, 1, 2,   // second triangle
     ]);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ELEMENT_ARRAY_BUFFER,
+      new Uint16Array(indices),
+      gl.STATIC_DRAW,
+    );
 
     /* ======== OFFSETS ========= */
 
@@ -155,7 +167,9 @@ void (() => {
     stats.begin();
     const time = (+new Date() - startTime) / 1000;
 
-    const isNeedResize = resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
+    const isNeedResize = resizeCanvasToDisplaySize(
+      gl.canvas as HTMLCanvasElement,
+    );
     if (isNeedResize) {
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     }

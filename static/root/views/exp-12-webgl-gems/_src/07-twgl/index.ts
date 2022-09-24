@@ -14,7 +14,10 @@ void (() => {
     throw new Error('no gl context');
   }
 
-  const programInfo = twgl.createProgramInfo(gl, [vertexShaderSource, fragmentShaderSource]);
+  const programInfo = twgl.createProgramInfo(gl, [
+    vertexShaderSource,
+    fragmentShaderSource,
+  ]);
 
   /* prettier-ignore */
   const arrays = {

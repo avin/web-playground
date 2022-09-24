@@ -23,6 +23,10 @@ const jsEsbuildTransformer = {
         minify: mode === 'build',
         // external: ['esbuild', ...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
         logLevel: 'silent',
+        define: {
+          'process.env.NODE_ENV':
+            mode === 'build' ? '"production"' : '"development"',
+        },
         plugins: [
           glsl({
             minify: true,

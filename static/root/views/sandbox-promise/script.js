@@ -99,26 +99,30 @@ const doComplexShit = async () => {
 
     // Шлем новые запросы по очереди
 
-    promiseResult = cancelablePromise((reqObj) => (async () => {
-      reqObj.req = makeRequest('GET', '/api/test1.do');
-      const data1 = await reqObj.req;
+    promiseResult = cancelablePromise((reqObj) =>
+      (async () => {
+        reqObj.req = makeRequest('GET', '/api/test1.do');
+        const data1 = await reqObj.req;
 
-      reqObj.req = makeRequest('GET', '/api/test2.do');
-      const data2 = await reqObj.req;
+        reqObj.req = makeRequest('GET', '/api/test2.do');
+        const data2 = await reqObj.req;
 
-      return `cr=${  data1.result  }${data2.result}`;
-    })());
+        return `cr=${data1.result}${data2.result}`;
+      })(),
+    );
     await promiseResult;
 
-    promiseResult = cancelablePromise((reqObj) => (async () => {
-      reqObj.req = makeRequest('GET', '/api/test1.do');
-      const data1 = await reqObj.req;
+    promiseResult = cancelablePromise((reqObj) =>
+      (async () => {
+        reqObj.req = makeRequest('GET', '/api/test1.do');
+        const data1 = await reqObj.req;
 
-      reqObj.req = makeRequest('GET', '/api/test2.do');
-      const data2 = await reqObj.req;
+        reqObj.req = makeRequest('GET', '/api/test2.do');
+        const data2 = await reqObj.req;
 
-      return `cr=${  data1.result  }${data2.result}`;
-    })());
+        return `cr=${data1.result}${data2.result}`;
+      })(),
+    );
     await promiseResult;
   } catch (e) {
     if (e instanceof CancelError) {

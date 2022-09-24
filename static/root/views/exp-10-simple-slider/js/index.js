@@ -71,7 +71,9 @@ class Slider {
         this.lastTranslate = pos;
 
         const percentVal = pos / this.options.width;
-        const val = (this.options.maxValue - this.options.minValue) * percentVal + this.options.minValue;
+        const val =
+          (this.options.maxValue - this.options.minValue) * percentVal +
+          this.options.minValue;
         this.options.onChange(Math.round(val));
       }
     });
@@ -87,7 +89,10 @@ class Slider {
 
   calcPos(clientX) {
     const xDiff = clientX - this.startX;
-    return Math.max(0, Math.min(this.options.width, this.currentTranslate + xDiff));
+    return Math.max(
+      0,
+      Math.min(this.options.width, this.currentTranslate + xDiff),
+    );
   }
 }
 

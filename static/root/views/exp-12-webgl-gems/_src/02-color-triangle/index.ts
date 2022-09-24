@@ -1,4 +1,8 @@
-import { createProgram, createShader, resizeCanvasToDisplaySize } from '../utils';
+import {
+  createProgram,
+  createShader,
+  resizeCanvasToDisplaySize,
+} from '../utils';
 
 import fragmentShaderSource from './shaders/fragment.glsl';
 import vertexShaderSource from './shaders/vertext.glsl';
@@ -23,7 +27,11 @@ if (!gl) {
 }
 
 const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+const fragmentShader = createShader(
+  gl,
+  gl.FRAGMENT_SHADER,
+  fragmentShaderSource,
+);
 
 const program = createProgram(gl, vertexShader, fragmentShader);
 
@@ -37,7 +45,8 @@ const colorBuffer = gl.createBuffer();
 {
   /* ======== POSITION ========= */
 
-  const positions = /* prettier-ignore */ new Float32Array([
+  const positions =
+    /* prettier-ignore */ new Float32Array([
     -0.8, -0.8,
     -0.8, 0.8,
     0.9, .25,
@@ -88,7 +97,9 @@ let lastTime;
     gl.bufferData(gl.ARRAY_BUFFER, colorsArr, gl.STATIC_DRAW);
   }
 
-  const isNeedResize = resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
+  const isNeedResize = resizeCanvasToDisplaySize(
+    gl.canvas as HTMLCanvasElement,
+  );
   if (isNeedResize) {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   }

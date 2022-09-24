@@ -1,4 +1,8 @@
-import { createProgram, createShader, resizeCanvasToDisplaySize } from '../utils';
+import {
+  createProgram,
+  createShader,
+  resizeCanvasToDisplaySize,
+} from '../utils';
 
 import fragmentShaderSource from './shaders/fragment.glsl';
 import vertexShaderSource from './shaders/vertext.glsl';
@@ -14,7 +18,10 @@ const loadImage = (url) => {
 };
 
 void (async () => {
-  const images = await Promise.all([loadImage('./img/Di-3d.png'), loadImage('./img/leaves.jpg')]);
+  const images = await Promise.all([
+    loadImage('./img/Di-3d.png'),
+    loadImage('./img/leaves.jpg'),
+  ]);
 
   const canvas: HTMLCanvasElement | null = document.querySelector('#canvas');
   if (!canvas) {
@@ -27,7 +34,11 @@ void (async () => {
   }
 
   const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+  const fragmentShader = createShader(
+    gl,
+    gl.FRAGMENT_SHADER,
+    fragmentShaderSource,
+  );
 
   const program = createProgram(gl, vertexShader, fragmentShader);
 
@@ -114,7 +125,11 @@ void (async () => {
       3, 1, 2,   // second triangle
     ]);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ELEMENT_ARRAY_BUFFER,
+      new Uint16Array(indices),
+      gl.STATIC_DRAW,
+    );
 
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -170,7 +185,11 @@ void (async () => {
       2, 3, 0,   // second triangle
     ]);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ELEMENT_ARRAY_BUFFER,
+      new Uint16Array(indices),
+      gl.STATIC_DRAW,
+    );
 
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -229,7 +248,11 @@ void (async () => {
       3, 4, 5,   // 2
     ]);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ELEMENT_ARRAY_BUFFER,
+      new Uint16Array(indices),
+      gl.STATIC_DRAW,
+    );
 
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -241,7 +264,9 @@ void (async () => {
   (function frame() {
     const time = (+new Date() - startTime) / 1000;
 
-    const isNeedResize = resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
+    const isNeedResize = resizeCanvasToDisplaySize(
+      gl.canvas as HTMLCanvasElement,
+    );
     if (isNeedResize) {
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     }

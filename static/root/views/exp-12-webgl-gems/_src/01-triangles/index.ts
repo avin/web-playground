@@ -1,6 +1,10 @@
 import fragmentShaderSource from './shaders/fragment.glsl';
 import vertexShaderSource from './shaders/vertext.glsl';
-import { createProgram, createShader, resizeCanvasToDisplaySize } from '../utils';
+import {
+  createProgram,
+  createShader,
+  resizeCanvasToDisplaySize,
+} from '../utils';
 
 const canvas: HTMLCanvasElement | null = document.querySelector('#canvas');
 if (!canvas) {
@@ -13,7 +17,11 @@ if (!gl) {
 }
 
 const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+const fragmentShader = createShader(
+  gl,
+  gl.FRAGMENT_SHADER,
+  fragmentShaderSource,
+);
 
 const program = createProgram(gl, vertexShader, fragmentShader);
 
@@ -27,7 +35,8 @@ const vao1 = gl.createVertexArray();
 gl.bindVertexArray(vao1);
 
 {
-  const positions = /* prettier-ignore */ new Float32Array([
+  const positions =
+    /* prettier-ignore */ new Float32Array([
     0, 0,
     0, 0.5,
     0.7, 0,
@@ -52,7 +61,8 @@ const vao2 = gl.createVertexArray();
 gl.bindVertexArray(vao2);
 
 {
-  const positions = /* prettier-ignore */ new Float32Array([
+  const positions =
+    /* prettier-ignore */ new Float32Array([
     .5, .5,
      1, .5,
     .25, 0,
@@ -73,7 +83,9 @@ gl.bindVertexArray(vao2);
 
 const startTime = +new Date();
 (function frame() {
-  const isNeedResize = resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
+  const isNeedResize = resizeCanvasToDisplaySize(
+    gl.canvas as HTMLCanvasElement,
+  );
   if (isNeedResize) {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   }

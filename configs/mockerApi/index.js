@@ -12,8 +12,10 @@ const proxy = {
       },
     },
   },
-  'GET /api/test1.do': (req, res) => res.status(200).json({ result: Math.random() }),
-  'GET /api/test2.do': (req, res) => res.status(400).json({ result: Math.random() }),
+  'GET /api/test1.do': (req, res) =>
+    res.status(200).json({ result: Math.random() }),
+  'GET /api/test2.do': (req, res) =>
+    res.status(400).json({ result: Math.random() }),
 };
 
 module.exports = delay(proxy, 1000);

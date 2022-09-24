@@ -13,7 +13,8 @@ const COMMON_OFFSET = 0; // Смещение относительно центр
 const FRAGMENTS = 200; // Число фрагментов (плавность линий)
 
 const canvas = document.querySelector('#canvas');
-const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+const gl =
+  canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 const devicePixelRatio = window.devicePixelRatio || 1;
 
 const ext = gl.getExtension('ANGLE_instanced_arrays');
@@ -33,7 +34,12 @@ const resizeCanvasToDisplaySize = (canvas) => {
   }
 };
 
-const buildPlane = (width = 1, height = 1, widthSegments = 1, heightSegments = 1) => {
+const buildPlane = (
+  width = 1,
+  height = 1,
+  widthSegments = 1,
+  heightSegments = 1,
+) => {
   const wSegs = widthSegments;
   const hSegs = heightSegments;
 
@@ -43,7 +49,10 @@ const buildPlane = (width = 1, height = 1, widthSegments = 1, heightSegments = 1
   const position = new Float32Array(num * 3);
   const normal = new Float32Array(num * 3);
   const uv = new Float32Array(num * 2);
-  const index = numIndices > 65536 ? new Uint32Array(numIndices) : new Uint16Array(numIndices);
+  const index =
+    numIndices > 65536
+      ? new Uint32Array(numIndices)
+      : new Uint16Array(numIndices);
 
   let u = 0;
   let v = 1;
@@ -112,7 +121,8 @@ for (let n = 0; n < meshesCount * 3; n += 1) {
     const step = i === 1 ? SHADOW_SIZE : LINE_SIZE;
     idxArr[idx] = n - meshesCount / 2;
     useColorArr[idx] = i === 1 ? 1 : 0;
-    offsetArr[idx] = i * step + (n - meshesCount / 2) * VERT_ACCURACY - COMMON_OFFSET;
+    offsetArr[idx] =
+      i * step + (n - meshesCount / 2) * VERT_ACCURACY - COMMON_OFFSET;
 
     idx += 1;
   }
@@ -124,14 +134,18 @@ const vertexShader = gl.createShader(gl.VERTEX_SHADER);
 gl.shaderSource(vertexShader, vertexShaderSrc);
 gl.compileShader(vertexShader);
 if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-  throw new Error(`could not compile shader: ${gl.getShaderInfoLog(vertexShader) || ''}`);
+  throw new Error(
+    `could not compile shader: ${gl.getShaderInfoLog(vertexShader) || ''}`,
+  );
 }
 
 const pixelShader = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(pixelShader, fragmentShaderSrc);
 gl.compileShader(pixelShader);
 if (!gl.getShaderParameter(pixelShader, gl.COMPILE_STATUS)) {
-  throw new Error(`could not compile shader: ${gl.getShaderInfoLog(pixelShader) || ''}`);
+  throw new Error(
+    `could not compile shader: ${gl.getShaderInfoLog(pixelShader) || ''}`,
+  );
 }
 
 const program = gl.createProgram();
@@ -199,14 +213,27 @@ function loop(time) {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   gl.uniform1f(iTimeLoc, time / 1000);
-  gl.uniform1f(sizeFactorLoc, (canvas.clientWidth * devicePixelRatio) / CONGESTION);
+  gl.uniform1f(
+    sizeFactorLoc,
+    (canvas.clientWidth * devicePixelRatio) / CONGESTION,
+  );
   gl.uniform1f(countLoc, meshesCount);
   gl.uniform3fv(backColorLoc, BACK_COLOR);
-  gl.uniform2f(iResolutionLoc, canvas.clientWidth * devicePixelRatio, canvas.clientHeight * devicePixelRatio);
+  gl.uniform2f(
+    iResolutionLoc,
+    canvas.clientWidth * devicePixelRatio,
+    canvas.clientHeight * devicePixelRatio,
+  );
 
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   // gl.drawElements(gl.TRIANGLES, plane.index.data.length, gl.UNSIGNED_SHORT, 0);
-  ext.drawElementsInstancedANGLE(gl.TRIANGLES, plane.index.data.length, gl.UNSIGNED_SHORT, 0, meshesCount * 3);
+  ext.drawElementsInstancedANGLE(
+    gl.TRIANGLES,
+    plane.index.data.length,
+    gl.UNSIGNED_SHORT,
+    0,
+    meshesCount * 3,
+  );
 
   window.requestAnimationFrame(loop);
 }

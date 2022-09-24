@@ -18,7 +18,8 @@ window.requestAnimFrame = (function () {
 
 function BackgroundAnimation() {
   const canvas = document.querySelector('.background-shader');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  const gl =
+    canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
   let time = 0;
 
@@ -67,7 +68,11 @@ function BackgroundAnimation() {
     window.requestAnimFrame(this.loop);
     time += 1 / 60;
     gl.uniform1f(gl.getUniformLocation(program, 'iTime'), time);
-    gl.uniform2f(gl.getUniformLocation(program, 'iResolution'), document.body.clientWidth, document.body.clientHeight);
+    gl.uniform2f(
+      gl.getUniformLocation(program, 'iResolution'),
+      document.body.clientWidth,
+      document.body.clientHeight,
+    );
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   };
 
@@ -77,7 +82,11 @@ function BackgroundAnimation() {
 }
 
 function ready(fn) {
-  if (document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading') {
+  if (
+    document.attachEvent
+      ? document.readyState === 'complete'
+      : document.readyState !== 'loading'
+  ) {
     fn();
   } else {
     document.addEventListener('DOMContentLoaded', fn);

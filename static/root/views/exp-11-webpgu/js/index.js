@@ -17,7 +17,10 @@
   const device = await adapter.requestDevice();
 
   const devicePixelRatio = window.devicePixelRatio || 1;
-  const presentationSize = [canvas.clientWidth * devicePixelRatio, canvas.clientHeight * devicePixelRatio];
+  const presentationSize = [
+    canvas.clientWidth * devicePixelRatio,
+    canvas.clientHeight * devicePixelRatio,
+  ];
   const presentationFormat = context.getPreferredFormat(adapter);
   // const presentationFormat = 'bgra8unorm';
 
@@ -147,7 +150,13 @@
     .listen()
     .onChange((value) => {
       dofParamsBufferData[0] = value;
-      device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 16);
+      device.queue.writeBuffer(
+        dofParamsBuffer,
+        0,
+        dofParamsBufferData.buffer,
+        0,
+        16,
+      );
     });
 
   gui
@@ -156,7 +165,13 @@
     .listen()
     .onChange((value) => {
       dofParamsBufferData[1] = value;
-      device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 16);
+      device.queue.writeBuffer(
+        dofParamsBuffer,
+        0,
+        dofParamsBufferData.buffer,
+        0,
+        16,
+      );
     });
 
   gui
@@ -165,7 +180,13 @@
     .listen()
     .onChange((value) => {
       dofParamsBufferData[2] = value;
-      device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 16);
+      device.queue.writeBuffer(
+        dofParamsBuffer,
+        0,
+        dofParamsBufferData.buffer,
+        0,
+        16,
+      );
     });
   gui
     .add(params, 'noiseFactor', 0, 1)
@@ -177,7 +198,13 @@
     });
   device.queue.writeBuffer(buffer, 28, noiseFactorBufferData.buffer, 0, 4);
 
-  device.queue.writeBuffer(dofParamsBuffer, 0, dofParamsBufferData.buffer, 0, 16);
+  device.queue.writeBuffer(
+    dofParamsBuffer,
+    0,
+    dofParamsBufferData.buffer,
+    0,
+    16,
+  );
 
   let cubeTexture;
   let postBindGroup;
@@ -239,7 +266,8 @@
     device.queue.writeBuffer(buffer, 0, timeBufferData.buffer, 0, 4);
 
     const swapChainTexture = swapChain.getCurrentTexture();
-    renderPassDescriptor.colorAttachments[0].view = swapChainTexture.createView();
+    renderPassDescriptor.colorAttachments[0].view =
+      swapChainTexture.createView();
 
     const commandEncoder = device.createCommandEncoder();
     const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
@@ -260,7 +288,8 @@
       presentationSize,
     );
 
-    const postPassEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
+    const postPassEncoder =
+      commandEncoder.beginRenderPass(renderPassDescriptor);
     postPassEncoder.setPipeline(postPipeline);
     postPassEncoder.setBindGroup(0, postBindGroup);
     postPassEncoder.draw(6, 1, 0, 0);

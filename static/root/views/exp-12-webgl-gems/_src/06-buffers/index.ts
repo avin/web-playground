@@ -23,7 +23,10 @@ void (() => {
 
   // ----------
 
-  const makeAttributes = ({ positionAttributeLocation, uvAttributeLocation }) => {
+  const makeAttributes = ({
+    positionAttributeLocation,
+    uvAttributeLocation,
+  }) => {
     const vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
 
@@ -79,7 +82,11 @@ void (() => {
         3, 1, 2,   // second triangle
       ]);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ELEMENT_ARRAY_BUFFER,
+      new Uint16Array(indices),
+      gl.STATIC_DRAW,
+    );
 
     /* ======== CLEAN ========= */
 
@@ -92,18 +99,28 @@ void (() => {
 
   const imageProgramObj = (() => {
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+    const fragmentShader = createShader(
+      gl,
+      gl.FRAGMENT_SHADER,
+      fragmentShaderSource,
+    );
 
     const program = createProgram(gl, vertexShader, fragmentShader);
 
-    const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
+    const positionAttributeLocation = gl.getAttribLocation(
+      program,
+      'a_position',
+    );
     const uvAttributeLocation = gl.getAttribLocation(program, 'a_uv');
 
     const timeLocation = gl.getUniformLocation(program, 'u_time');
     const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
     const imageLocation = gl.getUniformLocation(program, 'u_image');
 
-    const vao = makeAttributes({ positionAttributeLocation, uvAttributeLocation });
+    const vao = makeAttributes({
+      positionAttributeLocation,
+      uvAttributeLocation,
+    });
 
     return {
       vao,
@@ -118,18 +135,28 @@ void (() => {
 
   const bufferAProgramObj = (() => {
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, bufferAShaderSource);
+    const fragmentShader = createShader(
+      gl,
+      gl.FRAGMENT_SHADER,
+      bufferAShaderSource,
+    );
 
     const program = createProgram(gl, vertexShader, fragmentShader);
 
-    const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
+    const positionAttributeLocation = gl.getAttribLocation(
+      program,
+      'a_position',
+    );
     const uvAttributeLocation = gl.getAttribLocation(program, 'a_uv');
 
     const timeLocation = gl.getUniformLocation(program, 'u_time');
     const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
     const imageLocation = gl.getUniformLocation(program, 'u_image');
 
-    const vao = makeAttributes({ positionAttributeLocation, uvAttributeLocation });
+    const vao = makeAttributes({
+      positionAttributeLocation,
+      uvAttributeLocation,
+    });
 
     return {
       vao,
@@ -150,14 +177,22 @@ void (() => {
   gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
 
   const attachmentPoint = gl.COLOR_ATTACHMENT0;
-  gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, texture, 0);
+  gl.framebufferTexture2D(
+    gl.FRAMEBUFFER,
+    attachmentPoint,
+    gl.TEXTURE_2D,
+    texture,
+    0,
+  );
 
   const startTime = +new Date();
 
   (function frame() {
     const time = (+new Date() - startTime) / 1000;
 
-    const isNeedResize = resizeCanvasToDisplaySize(gl.canvas as HTMLCanvasElement);
+    const isNeedResize = resizeCanvasToDisplaySize(
+      gl.canvas as HTMLCanvasElement,
+    );
     if (isNeedResize) {
       gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
@@ -178,7 +213,10 @@ void (() => {
     gl.useProgram(bufferAProgramObj.program);
 
     gl.uniform1f(bufferAProgramObj.uniforms.timeLocation, time);
-    gl.uniform2fv(bufferAProgramObj.uniforms.resolutionLocation, [gl.canvas.width, gl.canvas.height]);
+    gl.uniform2fv(bufferAProgramObj.uniforms.resolutionLocation, [
+      gl.canvas.width,
+      gl.canvas.height,
+    ]);
 
     gl.activeTexture(gl.TEXTURE0 + 0);
     gl.bindTexture(gl.TEXTURE_2D, backTexture);
@@ -196,7 +234,16 @@ void (() => {
     gl.bindVertexArray(null);
 
     gl.bindTexture(gl.TEXTURE_2D, backTexture);
-    gl.copyTexImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 0, 0, canvas.clientWidth, canvas.clientHeight, 0);
+    gl.copyTexImage2D(
+      gl.TEXTURE_2D,
+      0,
+      gl.RGBA,
+      0,
+      0,
+      canvas.clientWidth,
+      canvas.clientHeight,
+      0,
+    );
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -209,7 +256,10 @@ void (() => {
     gl.bindVertexArray(imageProgramObj.vao);
 
     gl.uniform1f(imageProgramObj.uniforms.timeLocation, time);
-    gl.uniform2fv(imageProgramObj.uniforms.resolutionLocation, [gl.canvas.width, gl.canvas.height]);
+    gl.uniform2fv(imageProgramObj.uniforms.resolutionLocation, [
+      gl.canvas.width,
+      gl.canvas.height,
+    ]);
 
     gl.activeTexture(gl.TEXTURE0 + 0);
     gl.bindTexture(gl.TEXTURE_2D, texture);

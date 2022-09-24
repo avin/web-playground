@@ -746,6 +746,15 @@ fs-extra@10.0.0:
     jsonfile "^6.0.1"
     universalify "^2.0.0"
 
+fs-extra@^10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-10.1.0.tgz#02873cfbc4084dde127eaa5f9905eef2325d1abf"
+  integrity sha512-oRXApq54ETRj4eMiFzGnHWGy+zo5raudjuxN0b8H7s/RU2oW0Wvsx9O0ACRN/kRq9E8Vu/ReskGB5o3ji+FzHQ==
+  dependencies:
+    graceful-fs "^4.2.0"
+    jsonfile "^6.0.1"
+    universalify "^2.0.0"
+
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
@@ -1133,10 +1142,10 @@ ms@2.1.3:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-multi-static@^0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/multi-static/-/multi-static-0.2.7.tgz#abfe9329b555fed9f81db5a9ad98753a123c7749"
-  integrity sha512-M6/cwTsXXTwdmHILuwLZsGu+vhzyDaL8VUBh08oaPB0hgHMmbQjiab9E63/sriNINIRMA9WgXl+qsZGE+jfJMw==
+multi-static@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/multi-static/-/multi-static-0.2.8.tgz#a8ca666a463f3d1e19954cd80606b6fd41940c1b"
+  integrity sha512-UwfWVy365uyjeK4F+Ni6BstdumKXQOhBkfrafEHvn0vt0slMY39HocTx6yEhgEUKZVIOx6F2/M5CCysdk2uu8g==
   dependencies:
     cac "^6.7.14"
     defu "^6.1.0"
