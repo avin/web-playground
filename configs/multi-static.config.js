@@ -9,6 +9,7 @@ const { htmlMustacheTransformer } = require('./transformers/htmlMustache');
 const {
   jsEsbuildTransformer,
   tsEsbuildTransformer,
+  applyEsbuildMiddleware,
 } = require('./transformers/jsEsbuild');
 
 module.exports = defineConfig({
@@ -43,6 +44,7 @@ module.exports = defineConfig({
   },
 
   onBeforeSetupMiddleware({ app }) {
+    applyEsbuildMiddleware(app);
     mockerApi(app, path.resolve(__dirname, './mockerApi/index.js'));
   },
 });

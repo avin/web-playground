@@ -3,7 +3,7 @@
   "include": [
     "static/**/*.ts",
     "static/**/*.tsx",
-    "src/**/*.js",
+    "static/**/*.js",
     "configs/**/*.js",
     ".eslintrc.js"
   ]
