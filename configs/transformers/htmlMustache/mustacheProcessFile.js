@@ -52,6 +52,21 @@ const mustacheProcessFile = (fileSrc, customOptions = {}, originalFileSrc) => {
       };
     },
 
+    listSubFolders: () => {
+      return (text, render) => {
+        const folder = fileSrc.split(path.sep).slice(0, -1).join(path.sep);
+        const dirs = fs
+          .readdirSync(folder, { withFileTypes: true })
+          .filter((dirent) => dirent.isDirectory())
+          .map((dirent) => dirent.name)
+          .filter((dir) => /^\d/.test(dir));
+
+        return dirs.reduce((acc, dir) => {
+          return acc + text.replace(/__FOLDER__/g, dir);
+        }, '');
+      };
+    },
+
     ...customOptions.variables,
   });
 };

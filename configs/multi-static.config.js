@@ -5,6 +5,7 @@ const { defineConfig, getFilesList } = require('multi-static');
 const staticHashVersion = require('static-hash-version');
 const localhostCerts = require('localhost-certs');
 const { scssTransformer } = require('./transformers/scss');
+const { htmlMustacheTransformer } = require('./transformers/htmlMustache');
 const {
   jsEsbuildTransformer,
   tsEsbuildTransformer,
@@ -18,7 +19,12 @@ module.exports = defineConfig({
     ...localhostCerts(),
   },
 
-  transformers: [scssTransformer, jsEsbuildTransformer, tsEsbuildTransformer],
+  transformers: [
+    scssTransformer,
+    jsEsbuildTransformer,
+    tsEsbuildTransformer,
+    htmlMustacheTransformer,
+  ],
 
   onBeforeBuild() {
     fs.removeSync(this.buildPath);

@@ -1,5 +1,7 @@
 {
   "name": "transformer-html-mustache",
   "version": "0.0.1",
-  "dependencies": {}
+  "dependencies": {
+    "mustache": "^4.2.0"
+  }
 }

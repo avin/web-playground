@@ -21,7 +21,6 @@ const jsEsbuildTransformer = {
         metafile: false,
         target: 'es2015',
         minify: mode === 'build',
-        // external: ['esbuild', ...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})],
         logLevel: 'silent',
         define: {
           'process.env.NODE_ENV':
@@ -40,8 +39,6 @@ const jsEsbuildTransformer = {
       return text;
     },
   ],
-  // sendResponse: ({ file, req, res, next }) => {},
-  // writeContent: async ({ file, buildPath }) => {},
 };
 
 const tsEsbuildTransformer = {
