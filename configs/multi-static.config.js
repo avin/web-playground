@@ -1,6 +1,4 @@
 const fs = require('fs-extra');
-const path = require('path');
-const mockerApi = require('mocker-api');
 const { defineConfig, getFilesList } = require('multi-static');
 const staticHashVersion = require('static-hash-version');
 const localhostCerts = require('localhost-certs');
@@ -11,6 +9,7 @@ const {
   tsEsbuildTransformer,
   applyEsbuildMiddleware,
 } = require('./transformers/jsEsbuild');
+const { middleware: fakeApiMiddleware } = require('fake-api-middleware');
 
 module.exports = defineConfig({
   mapping: [['./static/root', '/']],
@@ -45,6 +44,14 @@ module.exports = defineConfig({
 
   onBeforeSetupMiddleware({ app }) {
     applyEsbuildMiddleware(app);
-    mockerApi(app, path.resolve(__dirname, './mockerApi/index.js'));
+
+    app.use(
+      fakeApiMiddleware({
+        responsesFile: './configs/mockApi/index.ts',
+        watchFiles: ['./configs/mockApi'],
+        enable: true,
+        responseDelay: 300,
+      }),
+    );
   },
 });
