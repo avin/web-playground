@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../static/root/gym/1/1.9/script.ts"],
+  "sourcesContent": ["// @process\nexport {};\n\nconst user = {\n  id: 1,\n  profile: {\n    name: 'John',\n    address: {\n      city: 'New York',\n      street: '5th Avenue',\n    },\n  },\n};\n\n// \u0424\u0443\u043D\u043A\u0446\u0438\u044F: get(object, path, defaultValue)\n// get(user, 'profile.address.city') \u2192 'New York'\n// get(user, 'profile.phone.number') \u2192 undefined\n// get(user, 'profile.phone.number', 'N/A') \u2192 'N/A'\n\nconst get = (obj: any, keyStr: string, defaultVal?: string) => {\n  const keyArr = keyStr.split('.');\n  let subObj: any = obj;\n  for (const key of keyArr) {\n    if (subObj === null || subObj === undefined || !(key in subObj)) {\n      return defaultVal;\n    }\n    subObj = subObj[key];\n  }\n  return subObj;\n};\n\nconsole.log(get(user, 'profile.address.city'), 'New York');\nconsole.log(get(user, 'profile.phone.number'), undefined);\nconsole.log(get(user, 'profile.phone.number', 'N/A'), 'N/A');\n//\n//\n"],
+  "mappings": "AAGA,IAAMA,EAAO,CACX,GAAI,EACJ,QAAS,CACP,KAAM,OACN,QAAS,CACP,KAAM,WACN,OAAQ,YACV,CACF,CACF,EAOMC,EAAM,CAACC,EAAUC,EAAgBC,IAAwB,CAC7D,IAAMC,EAASF,EAAO,MAAM,GAAG,EAC3BG,EAAcJ,EAClB,QAAWK,KAAOF,EAAQ,CACxB,GAAIC,GAAW,MAAgC,EAAEC,KAAOD,GACtD,OAAOF,EAETE,EAASA,EAAOC,EAClB,CACA,OAAOD,CACT,EAEA,QAAQ,IAAIL,EAAID,EAAM,sBAAsB,EAAG,UAAU,EACzD,QAAQ,IAAIC,EAAID,EAAM,sBAAsB,EAAG,MAAS,EACxD,QAAQ,IAAIC,EAAID,EAAM,uBAAwB,KAAK,EAAG,KAAK",
+  "names": ["user", "get", "obj", "keyStr", "defaultVal", "keyArr", "subObj", "key"]
+}

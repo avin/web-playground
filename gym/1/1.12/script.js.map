@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../static/root/gym/1/1.12/script.ts"],
+  "sourcesContent": ["// @process\nexport {};\n\nconst items = Array.from({ length: 100 }, (_, i) => ({\n  id: i + 1,\n  name: `Item ${i + 1}`,\n}));\n\n// \u0424\u0443\u043D\u043A\u0446\u0438\u044F: paginate(array, page, pageSize)\n// paginate(items, 1, 10) \u2192 items 1-10\n// paginate(items, 2, 10) \u2192 items 11-20\n\nconst paginate_OLD = <T>(arr: T[], page: number, pageSize: number): T[] => {\n  const result: T[] = [];\n  const startPos = (page - 1) * pageSize;\n  for (let i = startPos; i < startPos + pageSize; i++) {\n    if (i < arr.length) {\n      result.push(arr[i]);\n    }\n  }\n  return result;\n};\n\nconst paginate = <T>(arr: T[], page: number, pageSize: number): T[] => {\n  return arr.slice((page - 1) * pageSize, page * pageSize);\n};\n\nconsole.log(paginate(items, 1, 10), 'items 1-10');\nconsole.log(paginate(items, 2, 10), 'items 11-20');\n"],
+  "mappings": "AAGA,IAAMA,EAAQ,MAAM,KAAK,CAAE,OAAQ,GAAI,EAAG,CAACC,EAAGC,KAAO,CACnD,GAAIA,EAAI,EACR,KAAM,QAAQA,EAAI,GACpB,EAAE,EAiBF,IAAMC,EAAW,CAAIC,EAAUC,EAAcC,IACpCF,EAAI,OAAOC,EAAO,GAAKC,EAAUD,EAAOC,CAAQ,EAGzD,QAAQ,IAAIH,EAASI,EAAO,EAAG,EAAE,EAAG,YAAY,EAChD,QAAQ,IAAIJ,EAASI,EAAO,EAAG,EAAE,EAAG,aAAa",
+  "names": ["items", "_", "i", "paginate", "arr", "page", "pageSize", "items"]
+}

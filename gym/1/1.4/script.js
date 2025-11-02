@@ -1,0 +1,2 @@
+var i=[{id:1,name:"Laptop Pro",category:"Electronics",price:1500,inStock:!0},{id:2,name:"Laptop Air",category:"Electronics",price:1200,inStock:!1},{id:3,name:"Mouse",category:"Accessories",price:50,inStock:!0},{id:4,name:"Keyboard",category:"Accessories",price:100,inStock:!0}],n=(t,r,o)=>t.filter(e=>e.category===r.category&&e.inStock===r.inStock&&e.price>=r.minPrice).sort((e,c)=>o==="price"?e.price-c.price:e.name.localeCompare(c.name)),a=n(i,{category:"Electronics",inStock:!0,minPrice:1e3},"price");console.log(a);
+//# sourceMappingURL=script.js.map

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../static/root/gym/1/1.8/script.ts"],
+  "sourcesContent": ["// @process\nexport {};\n\nconst orders = [\n  { id: 1, total: 100, status: 'completed' },\n  { id: 2, total: 250, status: 'completed' },\n  { id: 3, total: 150, status: 'pending' },\n  { id: 4, total: 300, status: 'completed' },\n];\n\n// \u0412\u044B\u0447\u0438\u0441\u043B\u0438\u0442\u044C:\n// - totalRevenue (\u0442\u043E\u043B\u044C\u043A\u043E completed)\n// - averageOrder\n// - completedCount\n\nlet totalRevenue = 0;\nlet averageOrder = 0;\nlet completedCount = 0;\n\norders.forEach((order) => {\n  if (order.status === 'completed') {\n    totalRevenue += order.total;\n    completedCount += 1;\n  }\n  averageOrder += order.total;\n});\naverageOrder = averageOrder / orders.length;\n\nconsole.log({\n  totalRevenue,\n  averageOrder,\n  completedCount,\n});\n"],
+  "mappings": "AAGA,IAAMA,EAAS,CACb,CAAE,GAAI,EAAG,MAAO,IAAK,OAAQ,WAAY,EACzC,CAAE,GAAI,EAAG,MAAO,IAAK,OAAQ,WAAY,EACzC,CAAE,GAAI,EAAG,MAAO,IAAK,OAAQ,SAAU,EACvC,CAAE,GAAI,EAAG,MAAO,IAAK,OAAQ,WAAY,CAC3C,EAOIC,EAAe,EACfC,EAAe,EACfC,EAAiB,EAErBH,EAAO,QAASI,GAAU,CACpBA,EAAM,SAAW,cACnBH,GAAgBG,EAAM,MACtBD,GAAkB,GAEpBD,GAAgBE,EAAM,KACxB,CAAC,EACDF,EAAeA,EAAeF,EAAO,OAErC,QAAQ,IAAI,CACV,aAAAC,EACA,aAAAC,EACA,eAAAC,CACF,CAAC",
+  "names": ["orders", "totalRevenue", "averageOrder", "completedCount", "order"]
+}
