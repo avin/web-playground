@@ -40,10 +40,10 @@ const toOsPath = (servePath) =>
     .join(path.sep);
 const toPosixPath = (servePath) =>
   servePath.replace(/^[\\/]+/, '').replace(/\\/g, '/');
-const makeCacheKey = (entryPath, servePath) =>
-  `${path.resolve(entryPath)}::${servePath}`;
+const makeCacheKey = (entryPath, servePath, mode) =>
+  `${path.resolve(entryPath)}::${servePath}::${mode}`;
 
-const createBuildOptions = (entryPath, servePath) => {
+const createBuildOptions = (entryPath, servePath, mode) => {
   const relativeEntry = path.relative(staticRoot, entryPath);
   const normalizedServePath = toOsPath(servePath);
 
@@ -52,12 +52,17 @@ const createBuildOptions = (entryPath, servePath) => {
     entryPoints: [relativeEntry],
     bundle: true,
     format: 'esm',
-    sourcemap: true,
+    sourcemap: mode === 'build',
     metafile: true,
     write: false,
     outfile: path.join(virtualOutDir, normalizedServePath),
     logLevel: 'silent',
+    minify: mode === 'build',
     target: ['es2018'],
+    define: {
+      'process.env.NODE_ENV':
+        mode === 'build' ? '"production"' : '"development"',
+    },
     plugins: [
       glsl({
         minify: true,
@@ -69,8 +74,8 @@ const createBuildOptions = (entryPath, servePath) => {
   };
 };
 
-const createEsbuildContext = async (entryPath, servePath) => {
-  const options = createBuildOptions(entryPath, servePath);
+const createEsbuildContext = async (entryPath, servePath, mode) => {
+  const options = createBuildOptions(entryPath, servePath, mode);
 
   if (typeof esbuild.context === 'function') {
     return esbuild.context(options);
@@ -111,11 +116,11 @@ const createEsbuildContext = async (entryPath, servePath) => {
   };
 };
 
-const ensureContext = async (cacheKey, entryPath, servePath) => {
+const ensureContext = async (cacheKey, entryPath, servePath, mode) => {
   let cacheEntry = buildCache.get(cacheKey);
 
   if (!cacheEntry) {
-    const context = await createEsbuildContext(entryPath, servePath);
+    const context = await createEsbuildContext(entryPath, servePath, mode);
     cacheEntry = { context };
     buildCache.set(cacheKey, cacheEntry);
     registeredContexts.add(context);
@@ -216,11 +221,13 @@ const esbuildBundleTransformer = {
   }),
   sendResponse: async ({ file, res, next }) => {
     try {
-      const cacheKey = makeCacheKey(file.srcPath, file.servePath);
+      const mode = 'dev';
+      const cacheKey = makeCacheKey(file.srcPath, file.servePath, mode);
       const cacheEntry = await ensureContext(
         cacheKey,
         file.srcPath,
         file.servePath,
+        mode,
       );
       const result = await rebuildWithCache(cacheEntry);
       const outputFiles = result.outputFiles || [];
@@ -237,11 +244,12 @@ const esbuildBundleTransformer = {
     }
   },
   writeContent: async ({ file, buildPath, mode }) => {
-    const cacheKey = makeCacheKey(file.srcPath, file.servePath);
+    const cacheKey = makeCacheKey(file.srcPath, file.servePath, mode);
     const cacheEntry = await ensureContext(
       cacheKey,
       file.srcPath,
       file.servePath,
+      mode,
     );
     const result = await rebuildWithCache(cacheEntry);
     const outputFiles = result.outputFiles || [];
