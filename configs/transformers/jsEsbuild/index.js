@@ -1,105 +1,257 @@
+const path = require('path');
+const { existsSync } = require('fs');
+const { mkdir, writeFile } = require('fs/promises');
 const { makeTest } = require('multi-static');
-const { build: esbuildBuild } = require('esbuild');
+const esbuild = require('esbuild');
 const { glsl } = require('esbuild-plugin-glsl');
 const inlineImportPlugin = require('esbuild-plugin-inline-import');
 
-const clients = {};
-const cache = {};
+const staticRoot = path.resolve(process.cwd(), 'static');
+const virtualOutDir = path.join(process.cwd(), '.multi-static-esbuild');
 
-const applyEsbuildMiddleware = (app) => {
-  app.get('/esbuild', async function (req, res) {
-    const srcPath = req.query.srcPath;
-    res.set({
-      'Cache-Control': 'no-cache',
-      'Content-Type': 'text/event-stream',
-      Connection: 'keep-alive',
-    });
-    res.flushHeaders();
+const buildCache = new Map();
+const registeredContexts = new Set();
+let shutdownHooksAttached = false;
 
-    clients[srcPath] ||= [];
-    clients[srcPath].push(res);
-  });
+const attachShutdownHooks = () => {
+  if (shutdownHooksAttached) {
+    return;
+  }
+
+  const disposeAll = () => {
+    for (const ctx of registeredContexts) {
+      ctx.dispose().catch(() => {
+        // ignore
+      });
+    }
+  };
+
+  process.once('SIGINT', disposeAll);
+  process.once('SIGTERM', disposeAll);
+  process.once('exit', disposeAll);
+
+  shutdownHooksAttached = true;
 };
 
-const jsEsbuildTransformer = {
-  test: makeTest({
-    check: ({ file }) => file.srcPath.endsWith('.js'),
-    checkFirstLine: (firstLine) => firstLine.startsWith('// @process'),
-  }),
-  processors: [
-    async ({ file, mode }) => {
-      if (!cache[file.srcPath]) {
-        const buildResult = await esbuildBuild({
-          entryPoints: [file.srcPath],
-          outfile: 'out.js',
-          write: false,
-          platform: 'browser',
-          bundle: true,
-          format: 'iife',
-          metafile: false,
-          target: 'es2015',
-          minify: mode === 'build',
-          logLevel: 'silent',
-          define: {
-            'process.env.NODE_ENV':
-              mode === 'build' ? '"production"' : '"development"',
-          },
-          plugins: [
-            glsl({
-              minify: true,
-            }),
-            inlineImportPlugin({
-              filter: /^raw:/,
-            }),
-          ],
-          ...(mode === 'dev' && {
-            banner: {
-              js: `(() => new EventSource("/esbuild?srcPath=${encodeURIComponent(
-                file.srcPath,
-              )}").onmessage = () => location.reload())();`,
-            },
-            watch: {
-              onRebuild(error, buildResult) {
-                if (error) {
-                  console.log('ESBuild:', error);
-                  return;
-                }
+const toOsPath = (servePath) =>
+  servePath
+    .replace(/^[\\/]+/, '')
+    .split('/')
+    .join(path.sep);
+const toPosixPath = (servePath) =>
+  servePath.replace(/^[\\/]+/, '').replace(/\\/g, '/');
+const makeCacheKey = (entryPath, servePath) =>
+  `${path.resolve(entryPath)}::${servePath}`;
 
-                cache[file.srcPath] = buildResult.outputFiles[0].text;
+const createBuildOptions = (entryPath, servePath) => {
+  const relativeEntry = path.relative(staticRoot, entryPath);
+  const normalizedServePath = toOsPath(servePath);
 
-                if (clients[file.srcPath]) {
-                  clients[file.srcPath].forEach((res) => {
-                    res.write('data: update\n\n');
-                  });
-                  clients[file.srcPath].length = 0;
-                }
+  return {
+    absWorkingDir: staticRoot,
+    entryPoints: [relativeEntry],
+    bundle: true,
+    format: 'esm',
+    sourcemap: true,
+    metafile: true,
+    write: false,
+    outfile: path.join(virtualOutDir, normalizedServePath),
+    logLevel: 'silent',
+    target: ['es2018'],
+    plugins: [
+      glsl({
+        minify: true,
+      }),
+      inlineImportPlugin({
+        filter: /^raw:/,
+      }),
+    ],
+  };
+};
 
-                console.log('ESBuild: code rebuilt successfully');
-              },
-            },
-          }),
-        });
+const createEsbuildContext = async (entryPath, servePath) => {
+  const options = createBuildOptions(entryPath, servePath);
 
-        cache[file.srcPath] = buildResult.outputFiles[0].text;
+  if (typeof esbuild.context === 'function') {
+    return esbuild.context(options);
+  }
+
+  const legacyOptions = {
+    ...options,
+    incremental: true,
+  };
+
+  let incrementalResult = await esbuild.build(legacyOptions);
+  let firstRun = true;
+
+  return {
+    rebuild: async () => {
+      if (firstRun) {
+        firstRun = false;
+        return incrementalResult;
       }
 
-      return cache[file.srcPath];
+      if (incrementalResult.rebuild) {
+        incrementalResult = await incrementalResult.rebuild();
+        return incrementalResult;
+      }
+
+      incrementalResult = await esbuild.build(legacyOptions);
+      return incrementalResult;
     },
-  ],
+    dispose: async () => {
+      if (
+        incrementalResult &&
+        incrementalResult.rebuild &&
+        typeof incrementalResult.rebuild.dispose === 'function'
+      ) {
+        incrementalResult.rebuild.dispose();
+      }
+    },
+  };
 };
 
-const tsEsbuildTransformer = {
-  ...jsEsbuildTransformer,
-  beforeTest: ({ file }) => {
-    file.servePath = file.servePath.replace(/\.ts$/, '.js');
-    file.srcPath = file.srcPath.replace(/\.js$/, '.ts');
+const ensureContext = async (cacheKey, entryPath, servePath) => {
+  let cacheEntry = buildCache.get(cacheKey);
+
+  if (!cacheEntry) {
+    const context = await createEsbuildContext(entryPath, servePath);
+    cacheEntry = { context };
+    buildCache.set(cacheKey, cacheEntry);
+    registeredContexts.add(context);
+    attachShutdownHooks();
+  }
+
+  return cacheEntry;
+};
+
+const disposeContext = async (cacheKey) => {
+  const cacheEntry = buildCache.get(cacheKey);
+  if (!cacheEntry) {
+    return;
+  }
+
+  buildCache.delete(cacheKey);
+  registeredContexts.delete(cacheEntry.context);
+
+  try {
+    await cacheEntry.context.dispose();
+  } catch (error) {
+    // ignore
+  }
+};
+
+const rebuildWithCache = async (cacheEntry) => {
+  if (!cacheEntry.pending) {
+    cacheEntry.pending = cacheEntry.context
+      .rebuild()
+      .then((result) => {
+        cacheEntry.pending = undefined;
+        return result;
+      })
+      .catch((error) => {
+        cacheEntry.pending = undefined;
+        throw error;
+      });
+  }
+
+  return cacheEntry.pending;
+};
+
+const ensureDir = async (dirPath) => {
+  await mkdir(dirPath, { recursive: true });
+};
+
+const findOutputByServePath = (servePath, outputFiles) => {
+  const normalized = toPosixPath(servePath);
+
+  for (const file of outputFiles) {
+    const relative = path
+      .relative(virtualOutDir, file.path)
+      .split(path.sep)
+      .join('/');
+    if (relative === normalized && file.path.endsWith('.js')) {
+      return file;
+    }
+  }
+
+  return outputFiles.find((file) => file.path.endsWith('.js'));
+};
+
+const writeOutputsToBuildDir = async (buildPath, outputFiles) => {
+  for (const file of outputFiles) {
+    const relative = path
+      .relative(virtualOutDir, file.path)
+      .split(path.sep)
+      .join(path.posix.sep);
+    const destination = path.join(buildPath, relative);
+    await ensureDir(path.dirname(destination));
+    await writeFile(destination, file.contents);
+  }
+};
+
+const esbuildBundleTransformer = {
+  beforeTest: ({ file, mode }) => {
+    const originalServeExt = path.extname(file.servePath);
+    const originalSrcExt = path.extname(file.srcPath);
+
+    if (
+      mode === 'build' &&
+      ['.ts', '.js'].includes(originalSrcExt) &&
+      originalServeExt === '.ts'
+    ) {
+      file.servePath = file.servePath.replace(/\.ts$/, '.js');
+    }
+
+    if (originalSrcExt === '.js') {
+      const tsCandidate = file.srcPath.replace(/\.js$/, '.ts');
+      if (existsSync(tsCandidate)) {
+        file.srcPath = tsCandidate;
+      }
+    }
   },
   test: makeTest({
-    check: ({ file }) => file.srcPath.endsWith('.ts'),
-    checkFirstLine: (firstLine) => firstLine.startsWith('// @process'),
+    check: ({ file }) => ['.js', '.ts'].includes(path.extname(file.srcPath)),
+    checkFirstLine: (firstLine) => firstLine.trim().startsWith('// @process'),
   }),
+  sendResponse: async ({ file, res, next }) => {
+    try {
+      const cacheKey = makeCacheKey(file.srcPath, file.servePath);
+      const cacheEntry = await ensureContext(
+        cacheKey,
+        file.srcPath,
+        file.servePath,
+      );
+      const result = await rebuildWithCache(cacheEntry);
+      const outputFiles = result.outputFiles || [];
+
+      const jsOutput = findOutputByServePath(file.servePath, outputFiles);
+      if (!jsOutput) {
+        throw new Error(`esbuild output for ${file.servePath} not found`);
+      }
+
+      res.setHeader('Content-Type', 'application/javascript');
+      res.send(jsOutput.text);
+    } catch (error) {
+      next(error);
+    }
+  },
+  writeContent: async ({ file, buildPath, mode }) => {
+    const cacheKey = makeCacheKey(file.srcPath, file.servePath);
+    const cacheEntry = await ensureContext(
+      cacheKey,
+      file.srcPath,
+      file.servePath,
+    );
+    const result = await rebuildWithCache(cacheEntry);
+    const outputFiles = result.outputFiles || [];
+
+    await writeOutputsToBuildDir(buildPath, outputFiles);
+
+    if (mode === 'build') {
+      await disposeContext(cacheKey);
+    }
+  },
 };
 
-module.exports.applyEsbuildMiddleware = applyEsbuildMiddleware;
-module.exports.jsEsbuildTransformer = jsEsbuildTransformer;
-module.exports.tsEsbuildTransformer = tsEsbuildTransformer;
+module.exports = { esbuildBundleTransformer };

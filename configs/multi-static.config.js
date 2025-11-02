@@ -4,11 +4,7 @@ const staticHashVersion = require('static-hash-version');
 const localhostCerts = require('localhost-certs');
 const { scssTransformer } = require('./transformers/scss');
 const { htmlMustacheTransformer } = require('./transformers/htmlMustache');
-const {
-  jsEsbuildTransformer,
-  tsEsbuildTransformer,
-  applyEsbuildMiddleware,
-} = require('./transformers/jsEsbuild');
+const { esbuildBundleTransformer } = require('./transformers/jsEsbuild');
 const { middleware: fakeApiMiddleware } = require('fake-api-middleware');
 
 module.exports = defineConfig({
@@ -21,8 +17,7 @@ module.exports = defineConfig({
 
   transformers: [
     scssTransformer,
-    jsEsbuildTransformer,
-    tsEsbuildTransformer,
+    esbuildBundleTransformer,
     htmlMustacheTransformer,
   ],
 
@@ -43,8 +38,6 @@ module.exports = defineConfig({
   },
 
   onBeforeSetupMiddleware({ app }) {
-    applyEsbuildMiddleware(app);
-
     app.use(
       fakeApiMiddleware({
         responsesFile: './configs/mockApi/index.ts',
