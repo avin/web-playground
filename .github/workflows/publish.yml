@@ -8,8 +8,8 @@ jobs:
 
       - uses: volta-cli/action@v3
         with:
-          node-version: 16.13.2
-          yarn-version: 1.22.18
+          node-version: 22.19.0
+          yarn-version: 1.22.22
 
       - name: Install and Build
         run: |
