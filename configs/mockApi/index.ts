@@ -24,4 +24,20 @@ export default {
     return res.status(500).json('Server crash');
     // return res.status(200).json([{ id: 1, text: 'Post1' },{ id: 1, text: 'Post2' }]);
   },
+
+  'GET /api/items': ({ req, res, query }) => {
+    // page=1&limit=20
+
+    const page = Number(query.page);
+    const limit = Number(query.limit);
+
+    const items: any[] = [];
+
+    const end = Math.min(limit * page, 200);
+    for (let i = Math.max(limit * (page - 1), 0); i < end; i++) {
+      items.push({ id: i + 1 });
+    }
+
+    return res.status(200).json(items);
+  },
 };
