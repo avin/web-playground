@@ -1,0 +1,2 @@
+var a=document.querySelector("form"),n=document.querySelector('[name="password"]'),r=document.querySelector('[name="confirmPassword"]'),t=document.querySelector("#error"),d=(e,o)=>e===o,s=()=>{n.value&&r.value?d(n.value,r.value)?t.innerText="":t.innerText="Passwords do not match":t.innerText="Type passwords"};n.addEventListener("input",s);r.addEventListener("input",s);a.addEventListener("submit",e=>{e.preventDefault()});s();
+//# sourceMappingURL=script.js.map

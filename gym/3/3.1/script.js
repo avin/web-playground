@@ -1,0 +1,2 @@
+async function l(t){let s=async o=>{let e=await fetch(o);if(!e.ok)throw new Error(`Response status: ${e.status}`);return e.json()},[a,n,r]=await Promise.allSettled([s(`/api/users/${t}`),s(`/api/users/${t}/posts`),s(`/api/users/${t}/comments`)]);return{user:a.status==="fulfilled"?a.value:null,posts:n.status==="fulfilled"?n.value:null,comments:r.status==="fulfilled"?r.value:null}}(async()=>{try{let t=await l("1");console.log("data=",t)}catch(t){console.warn("Error!!!",t)}})();
+//# sourceMappingURL=script.js.map

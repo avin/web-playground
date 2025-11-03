@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../static/root/gym/2/2.1/script.ts"],
+  "sourcesContent": ["// @process\nexport {};\n\n// \u0424\u0443\u043D\u043A\u0446\u0438\u044F: validateEmail(email: string): boolean\n// \u0414\u043E\u043B\u0436\u043D\u0430 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u0442\u044C \u0431\u0430\u0437\u043E\u0432\u0443\u044E \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\u0441\u0442\u044C email\n\nconst validateEmail = (str: string): boolean => {\n  return /^[a-z0-9.+_-]+@[a-z0-9.-]+\\.[a-z]{2,}$/i.test(str);\n};\n\nconsole.log(validateEmail('test@example.com'), true);\nconsole.log(validateEmail('test@example'), false);\nconsole.log(validateEmail('test.name+tag@example.co.uk'), true);\nconsole.log(validateEmail('@example.com'), false);\nconsole.log(validateEmail('test@@example.com'), false);\n"],
+  "mappings": "AAMA,IAAMA,EAAiBC,GACd,0CAA0C,KAAKA,CAAG,EAG3D,QAAQ,IAAID,EAAc,kBAAkB,EAAG,EAAI,EACnD,QAAQ,IAAIA,EAAc,cAAc,EAAG,EAAK,EAChD,QAAQ,IAAIA,EAAc,6BAA6B,EAAG,EAAI,EAC9D,QAAQ,IAAIA,EAAc,cAAc,EAAG,EAAK,EAChD,QAAQ,IAAIA,EAAc,mBAAmB,EAAG,EAAK",
+  "names": ["validateEmail", "str"]
+}
