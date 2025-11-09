@@ -1,20 +1,20 @@
 // @process
 export {};
 
-class VirtualScroll {
+class VirtualScroll<T> {
   container: HTMLElement;
-  items: any[];
+  items: T[];
   itemHeight: number;
-  renderItem: (item: any) => HTMLElement;
+  renderItem: (item: T) => HTMLElement;
   inner: HTMLElement;
 
   innerChildNodes = new Map<number, HTMLElement>();
 
   constructor(
     container: HTMLElement,
-    items: any[],
+    items: T[],
     itemHeight: number,
-    renderItem: (item: any) => string,
+    renderItem: (item: T) => string,
   ) {
     this.container = container;
     this.items = items;
@@ -26,21 +26,26 @@ class VirtualScroll {
       return template.content.firstElementChild! as HTMLElement;
     };
 
-    // const itemsBlock = document.createElement('div');
-    // this.itemsBlock = itemsBlock;
-    // itemsBlock.style.position = 'absolute';
-    // itemsBlock.style.width = '100%';
-    // itemsBlock.style.willChange = 'transform';
-
     const inner = document.createElement('div');
     this.inner = inner;
+    //inner.style.contain = 'layout style paint';
     inner.style.height = `${this.items.length * this.itemHeight}px`;
     inner.style.position = 'relative';
-    // inner.append(itemsBlock);
 
     this.container.append(inner);
 
-    container.addEventListener('scroll', this.render.bind(this));
+    let rafId: number | null = null;
+    container.addEventListener(
+      'scroll',
+      () => {
+        if (rafId) return; // Пропускаем если уже запланирован
+        rafId = requestAnimationFrame(() => {
+          this.render();
+          rafId = null;
+        });
+      },
+      { passive: true },
+    );
     this.render();
   }
 
