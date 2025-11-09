@@ -5,7 +5,7 @@ class VirtualScroll<T> {
   container: HTMLElement;
   items: T[];
   itemHeight: number;
-  renderItem: (item: T) => HTMLElement;
+  renderItem: (item: T) => string;
   inner: HTMLElement;
 
   innerChildNodes = new Map<number, HTMLElement>();
@@ -19,12 +19,7 @@ class VirtualScroll<T> {
     this.container = container;
     this.items = items;
     this.itemHeight = itemHeight;
-    this.renderItem = (item) => {
-      const itemHtml = renderItem(item);
-      const template = document.createElement('template');
-      template.innerHTML = itemHtml.trim();
-      return template.content.firstElementChild! as HTMLElement;
-    };
+    this.renderItem = renderItem;
 
     const inner = document.createElement('div');
     this.inner = inner;
@@ -49,8 +44,12 @@ class VirtualScroll<T> {
     this.render();
   }
 
-  createItemEl(i) {
-    const el = this.renderItem(this.items[i]);
+  createItemEl(i: number) {
+    const itemHtml = this.renderItem(this.items[i]);
+    const template = document.createElement('template');
+    template.innerHTML = itemHtml.trim();
+    const el = template.content.firstElementChild! as HTMLElement;
+
     el.style.position = 'absolute';
     el.style.width = '100%';
     el.style.transform = `translateY(${i * this.itemHeight}px)`;
