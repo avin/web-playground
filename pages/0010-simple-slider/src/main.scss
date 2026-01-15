@@ -1,5 +1,5 @@
 @use 'sass:math';
-@import '~common/styles/colors';
+@use '~common/styles/colors' as *;
 
 body,
 html {
