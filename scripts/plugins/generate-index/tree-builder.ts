@@ -103,7 +103,10 @@ export function generateTreeHtml(
     // Генерируем содержимое строки
     let content = '';
     if (isPage) {
-      content = `<a href="${child.path}/" class="tree-link">${child.name}</a>`;
+      const relativePath = child.path.startsWith('/')
+        ? child.path.slice(1)
+        : child.path;
+      content = `<a href="${relativePath}/" class="tree-link">${child.name}</a>`;
     } else {
       content = `<span class="tree-name">${child.name}</span>`;
     }
