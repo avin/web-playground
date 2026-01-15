@@ -5,6 +5,7 @@ import { generateIndexPlugin } from './scripts/plugins/generate-index';
 
 export default defineConfig({
   root: '.',
+  base: '/web-playground/',
   build: {
     rollupOptions: {
       input: getHtmlEntries(),
