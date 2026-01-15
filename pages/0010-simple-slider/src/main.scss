@@ -1,0 +1,62 @@
+@use 'sass:math';
+@import '../../../common/styles/colors';
+
+body,
+html {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main {
+}
+
+.Slider {
+  user-select: none;
+  &--labels {
+    position: relative;
+    height: 35px;
+  }
+
+  &--line {
+    border-bottom: 1px solid black;
+    position: relative;
+  }
+
+  &--mark {
+    $size: 21px;
+
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    border: 1px solid black;
+    background-color: white;
+    position: absolute;
+    z-index: 1;
+    top: #{math.div(-$size, 2)};
+    left: #{math.div(-$size, 2)};
+    cursor: pointer;
+  }
+
+  &--label {
+    position: absolute;
+
+    &_left {
+      left: 0;
+      bottom: 0;
+      transform: translateX(-50%);
+    }
+
+    &_right {
+      right: 0;
+      bottom: 0;
+      transform: translateX(50%);
+    }
+  }
+}

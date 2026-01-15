@@ -1,0 +1,32 @@
+body {
+  font-family: sans-serif;
+}
+
+.input {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+
+  &__input {
+    padding: 4px 8px;
+  }
+
+  &__suffix {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    z-index: 1;
+    font-weight: 400;
+    font-size: 17px;
+    pointer-events: none;
+    color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__input {
+    font-size: 18px;
+    letter-spacing: 0.03em;
+  }
+}

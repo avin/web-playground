@@ -1,3 +1,0 @@
-// @process
-
-import './_src';

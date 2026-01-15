@@ -1,0 +1,117 @@
+@import '../../../common/styles/colors';
+
+body {
+  margin: 0;
+}
+
+.section {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &_1 {
+    background-color: $blue5;
+  }
+  &_2 {
+    background-color: $red5;
+  }
+  &_3 {
+    background-color: $forest5;
+  }
+  &_4 {
+    background-color: $gold5;
+  }
+}
+
+.dialog {
+  $block: &;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  &_hidden {
+    visibility: hidden;
+  }
+
+  &__wrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+
+    background-color: rgba($dark-gray3, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: 0.25s;
+    opacity: 1;
+
+    #{$block}_hidden & {
+      opacity: 0;
+    }
+  }
+  &__window {
+    width: 600px;
+    background-color: $white;
+    box-shadow: 5px 5px 10px 0 rgba($dark-gray3, 0.5);
+    border-radius: 5px;
+    overflow: hidden;
+
+    transition: 0.25s;
+    transform: translateY(0px);
+
+    #{$block}_hidden & {
+      transform: translateY(60px);
+    }
+  }
+  &__header {
+    display: flex;
+    align-items: center;
+    background-color: $light-gray3;
+    padding: 10px 20px;
+
+    & > *:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+  &__title {
+    flex: 1;
+  }
+  &__icon {
+    $size: 15px;
+
+    width: $size;
+    height: $size;
+
+    background-image: url('../img/home-button.svg');
+    background-size: 100%;
+  }
+  &__controls {
+  }
+  &__content {
+    margin: 20px;
+  }
+  &__footer {
+    border-top: 1px solid $light-gray1;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__control {
+    $size: 15px;
+
+    width: $size;
+    height: $size;
+
+    &_type_close {
+      background-image: url('../img/close-button.svg');
+      background-size: 100%;
+    }
+  }
+}

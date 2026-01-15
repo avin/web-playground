@@ -1,9 +1,0 @@
-{
-  "name": "transformer-js-esbuild",
-  "version": "0.0.1",
-  "dependencies": {
-    "esbuild": "^0.25.12",
-    "esbuild-plugin-glsl": "^1.4.1",
-    "esbuild-plugin-inline-import": "^1.1.0"
-  }
-}
