@@ -20,7 +20,13 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+
+    /* Path mapping */
+    "baseUrl": ".",
+    "paths": {
+      "~common/*": ["./common/*"]
+    }
   },
   "include": ["pages", "vite-env.d.ts"]
 }

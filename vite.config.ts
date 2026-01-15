@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { relative } from 'node:path';
 import glob from 'fast-glob';
 import { defineConfig } from 'vite';
@@ -6,6 +7,11 @@ import { generateIndexPlugin } from './scripts/plugins/generate-index';
 export default defineConfig({
   root: '.',
   base: '/web-playground/',
+  resolve: {
+    alias: {
+      '~common': resolve(__dirname, './common'),
+    },
+  },
   build: {
     rollupOptions: {
       input: getHtmlEntries(),
