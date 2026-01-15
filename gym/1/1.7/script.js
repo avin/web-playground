@@ -1,2 +1,0 @@
-var i=[{id:1,name:"John",email:"john@example.com"},{id:2,name:"Jane",email:"jane@example.com"}],s=[{userId:1,avatar:"avatar1.jpg",role:"admin"},{userId:2,avatar:"avatar2.jpg",role:"user"},{userId:3,avatar:"avatar3.jpg",role:"user"}],o=(t,n)=>{let r=n.reduce((a,e)=>(a[e.userId]=e,a),{});return t.map(a=>{if(!r[a.id])return a;let{userId:e,...d}=r[a.id];return{...a,...d}})};console.log(o(i,s));
-//# sourceMappingURL=script.js.map

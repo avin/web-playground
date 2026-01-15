@@ -1,2 +1,0 @@
-var o=[{id:1,title:"Fix bug",priority:"high",date:"2024-01-15"},{id:2,title:"Review PR",priority:"low",date:"2024-01-10"},{id:3,title:"Deploy",priority:"high",date:"2024-01-10"},{id:4,title:"Meeting",priority:"medium",date:"2024-01-12"}],r=t=>({high:0,medium:1,low:2})[t]||0,l=o.sort((t,i)=>{let e=r(t.priority)-r(i.priority);return e!==0?e:t.date.localeCompare(i.date)});console.log(l);
-//# sourceMappingURL=script.js.map

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../static/root/0011-webpgu/js/shaders.js"],
-  "sourcesContent": ["// @process\n\nimport fragment from 'raw:../shaders/fragment.code';\nimport postFragment from 'raw:../shaders/postFragment.code';\nimport vertex from 'raw:../shaders/vertex.code';\n\nfunction stringToBuffer(str) {\n  const arr = str.split(',');\n  const view = new Uint32Array(arr);\n  return view;\n}\n\nwindow.SHADERS = {\n  fragment: stringToBuffer(fragment),\n  postFragment: stringToBuffer(postFragment),\n  vertex: stringToBuffer(vertex),\n};\n"],
-  "mappings": ";;;EAMA,SAASA,EAAeC,EAAK,CAC3B,IAAMC,EAAMD,EAAI,MAAM,GAAG,EAEzB,OADa,IAAI,YAAYC,CAAG,CAElC,CAEA,OAAO,QAAU,CACf,SAAUF,EAAeG,CAAQ,EACjC,aAAcH,EAAeI,CAAY,EACzC,OAAQJ,EAAeK,CAAM,CAC/B",
-  "names": ["stringToBuffer", "str", "arr", "fragment_default", "postFragment_default", "vertex_default"]
-}

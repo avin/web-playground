@@ -1,7 +1,0 @@
-{
-  "name": "page",
-  "version": "0.0.1",
-  "dependencies": {
-    "twgl.js": "5.0.1"
-  }
-}

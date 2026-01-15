@@ -1,2 +1,0 @@
-function a(l){return l.replace(/\D/g,"").replace(/^(\d{1})(\d{0,3})(\d{0,3})(\d{0,4}).*/,(s,u,r,t,n)=>{let e="+"+u;return r&&(e+=" ("+r),r.length===3&&(e+=")"),t&&(e+=" "+t),n&&(e+="-"+n),e})}var c;(c=document.querySelector("input"))==null||c.addEventListener("input",l=>{let i=l.currentTarget,s=i.value,u=i.selectionStart||0,r=s.slice(0,u).replace(/\D/g,"").length,t=a(s);i.value=t;let n=0,e=0;for(let o=0;o<t.length;o++)if(/\d/.test(t[o])&&(e++,e===r)){n=o+1;break}e<r&&(n=t.length),i.setSelectionRange(n,n)});
-//# sourceMappingURL=script.js.map

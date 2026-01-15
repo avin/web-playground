@@ -1,0 +1,12 @@
+import"../modulepreload-polyfill-B5Qt9EMX.js";class l{options={containerEl:null,width:200,minValue:0,maxValue:100,onChange:()=>{}};root=null;mark=null;lastTranslate=0;currentTranslate=0;isDragging=!1;startX=null;constructor(t={}){Object.assign(this.options,t),this.options.containerEl&&(this.root=this.options.containerEl,this.root.innerHTML="",this.root.style.width=`${this.options.width}px`,this.init())}init(){if(!this.root)return;this.root.innerHTML=`
+<div class='Slider'>
+    <div class='Slider--line'>
+        <div class='Slider--mark' data-id='mark'></div>
+    </div>
+
+    <div class='Slider--labels'>
+        <div class='Slider--label Slider--label_left' data-id='label-left'>-1</div>
+        <div class='Slider--label Slider--label_right' data-id='label-right'>1</div>
+    </div>
+</div>
+`,this.mark=this.root.querySelector('[data-id="mark"]');const t=this.root.querySelector('[data-id="label-left"]'),e=this.root.querySelector('[data-id="label-right"]');t&&(t.textContent=String(this.options.minValue)),e&&(e.textContent=String(this.options.maxValue)),this.mark&&(this.mark.addEventListener("mousedown",i=>this.handleStart(i)),this.mark.addEventListener("touchstart",i=>this.handleStart(i))),document.body.addEventListener("mouseup",()=>this.handleEnd()),document.body.addEventListener("mouseleave",()=>this.handleEnd()),document.body.addEventListener("touchend",()=>this.handleEnd()),document.body.addEventListener("mousemove",i=>this.handleMove(i)),document.body.addEventListener("touchmove",i=>this.handleMove(i))}handleStart(t){this.isDragging=!0,this.startX=this.getClientX(t)}handleEnd(){this.isDragging&&(this.isDragging=!1,this.currentTranslate=this.lastTranslate)}handleMove(t){if(!this.isDragging||!this.mark||this.startX===null)return;const e=this.calcPos(this.getClientX(t));this.mark.style.transform=`translateX(${e}px)`,this.lastTranslate=e;const i=e/this.options.width,a=(this.options.maxValue-this.options.minValue)*i+this.options.minValue;this.options.onChange(Math.round(a))}getClientX(t){return"touches"in t&&t.touches[0]?t.touches[0].pageX:"clientX"in t?t.clientX:0}calcPos(t){if(this.startX===null)return 0;const e=t-this.startX;return Math.max(0,Math.min(this.options.width,this.currentTranslate+e))}}const s=document.querySelector("#slider");if(s){const n=document.querySelector("#value");new l({containerEl:s,minValue:-100,maxValue:100,width:200,onChange:t=>{n&&(n.textContent=String(t))}})}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../static/root/gym/1/1.3/script.ts"],
-  "sourcesContent": ["// @process\nexport {};\n\nconst users = [\n  { id: 1, email: 'john@example.com', name: 'John' },\n  { id: 2, email: 'jane@example.com', name: 'Jane' },\n  { id: 3, email: 'john@example.com', name: 'Johnny' }, // \u0434\u0443\u0431\u043B\u0438\u043A\u0430\u0442\n  { id: 4, email: 'bob@example.com', name: 'Bob' },\n];\n\n// \u041E\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u043E email (\u043F\u0435\u0440\u0432\u043E\u0435 \u0432\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435)\n\nconst m = {};\nconst result = users.reduce((acc, item) => {\n  if (!m[item['email']]) {\n    m[item['email']] = true;\n    acc.push(item);\n  }\n  return acc;\n}, [] as { id: number; email: string; name: string }[]);\n\nconsole.log(result);\n"],
-  "mappings": "AAGA,IAAMA,EAAQ,CACZ,CAAE,GAAI,EAAG,MAAO,mBAAoB,KAAM,MAAO,EACjD,CAAE,GAAI,EAAG,MAAO,mBAAoB,KAAM,MAAO,EACjD,CAAE,GAAI,EAAG,MAAO,mBAAoB,KAAM,QAAS,EACnD,CAAE,GAAI,EAAG,MAAO,kBAAmB,KAAM,KAAM,CACjD,EAIMC,EAAI,CAAC,EACLC,EAASF,EAAM,OAAO,CAACG,EAAKC,KAC3BH,EAAEG,EAAK,SACVH,EAAEG,EAAK,OAAY,GACnBD,EAAI,KAAKC,CAAI,GAERD,GACN,CAAC,CAAkD,EAEtD,QAAQ,IAAID,CAAM",
-  "names": ["users", "m", "result", "acc", "item"]
-}
