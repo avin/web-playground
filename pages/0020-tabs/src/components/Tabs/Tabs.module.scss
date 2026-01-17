@@ -13,12 +13,9 @@
   gap: 4px;
 }
 
-.tabsContent {
-}
-
 .tab {
   padding: 2px 8px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 
   &:hover {
     background: $light-gray5;
@@ -28,7 +25,7 @@
     --tabGirth: 12px;
 
     background: $white;
-    padding: 4px calc(8px + var(--tabGirth));
+    padding: 4px calc(8px + var(--tabGirth)) 8px;
     margin: 0 calc(-1 * var(--tabGirth));
 
     /* prettier-ignore */
