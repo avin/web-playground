@@ -17,10 +17,15 @@ export function generateIndexPlugin(): Plugin {
 
     // Часть для DEV-режима (сервер)
     configureServer(server) {
+      const base = normalizeBase(server.config.base);
+      const indexPaths = getIndexPaths(base);
+      const stylesUrl = `${base}scripts/plugins/generate-index/styles.css`;
+
       // Генерируем индексную страницу (должен быть первым, чтобы перехватывать корневой путь)
       server.middlewares.use((req, res, next) => {
-        if (req.url === '/' || req.url === '/index.html') {
-          const html = generateHtml(true);
+        const urlPath = getPathname(req.url);
+        if (indexPaths.has(urlPath)) {
+          const html = generateHtml(true, base);
           res.statusCode = 200;
           res.setHeader('Content-Type', 'text/html; charset=utf-8');
           res.end(html);
@@ -31,7 +36,8 @@ export function generateIndexPlugin(): Plugin {
 
       // Отдаём статические файлы (CSS) - должны быть после обработки корня
       server.middlewares.use((req, res, next) => {
-        if (req.url === '/scripts/plugins/generate-index/styles.css') {
+        const urlPath = getPathname(req.url);
+        if (urlPath === stylesUrl) {
           res.statusCode = 200;
           res.setHeader('Content-Type', 'text/css; charset=utf-8');
           res.end(readFileSync(stylesPath));
@@ -54,7 +60,7 @@ export function generateIndexPlugin(): Plugin {
     },
   };
 
-  function generateHtml(isDev: boolean = false): string {
+  function generateHtml(isDev: boolean = false, base: string = '/'): string {
     const tree = buildPageTree();
     const treeHtml = generateTreeHtml(tree);
     const template = readFileSync(templatePath, 'utf-8');
@@ -63,8 +69,7 @@ export function generateIndexPlugin(): Plugin {
 
     if (isDev) {
       // В dev режиме используем ссылки на файлы
-      styles =
-        '<link rel="stylesheet" href="/scripts/plugins/generate-index/styles.css">';
+      styles = `<link rel="stylesheet" href="${base}scripts/plugins/generate-index/styles.css">`;
     } else {
       // В build режиме встраиваем стили напрямую
       styles = `<style>${readFileSync(stylesPath, 'utf-8')}</style>`;
@@ -74,4 +79,33 @@ export function generateIndexPlugin(): Plugin {
       .replace('{{TREE_CONTENT}}', treeHtml)
       .replace('{{STYLES}}', styles);
   }
+}
+
+function getPathname(url?: string): string {
+  if (!url) {
+    return '/';
+  }
+  return url.split('?')[0].split('#')[0];
+}
+
+function normalizeBase(base: string | undefined): string {
+  if (!base || base === './') {
+    return '/';
+  }
+  let normalized = base;
+  if (!normalized.startsWith('/')) {
+    normalized = `/${normalized}`;
+  }
+  if (!normalized.endsWith('/')) {
+    normalized = `${normalized}/`;
+  }
+  return normalized;
+}
+
+function getIndexPaths(base: string): Set<string> {
+  if (base === '/') {
+    return new Set(['/', '/index.html']);
+  }
+  const baseNoTrailingSlash = base.endsWith('/') ? base.slice(0, -1) : base;
+  return new Set([base, `${base}index.html`, baseNoTrailingSlash]);
 }
