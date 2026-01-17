@@ -25,7 +25,8 @@
 
 .tabView {
   // background: $light-gray5;
-  --sp1: 1px;
+  --sp2: 4px;
+  --sp1: calc(var(--sp2) / 2);
   --paddingInline: 8px;
   border-radius: 8px;
   margin: 4px var(--sp1);
@@ -34,17 +35,21 @@
   align-items: center;
   height: calc(var(--tabHeight) - var(--spaceVert) * 2);
 
-  &:hover {
+  .tab:not(.active):hover & {
     background: $light-gray1;
   }
 
   .active & {
-    --sp2: 2px;
-    background: rgba($white, 1);
+    background: $white;
     border-radius: 0;
     padding: 0 calc(16px + var(--sp2));
     margin: 0 calc(-8px - var(--sp2) + var(--sp1));
     height: 100%;
+
+    // Исправить глич полоску внизу при некоторых зумах
+    // должно совпадать с цветом заливки tabsContent
+    margin-top: 1px;
+    padding-bottom: 1px;
 
     --tabGirth: 12px;
     /* prettier-ignore */
