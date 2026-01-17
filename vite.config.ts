@@ -27,7 +27,10 @@ export default defineConfig({
       include: ['pages/0016-test-react/src/**/*.{ts,tsx,js,jsx}'],
     }),
     solid({
-      include: ['pages/0017-test-solid/src/**/*.{ts,tsx,js,jsx}'],
+      include: [
+        'pages/0017-test-solid/src/**/*.{ts,tsx,js,jsx}',
+        'pages/0020-tabs/src/**/*.{ts,tsx,js,jsx}',
+      ],
     }),
     svelte({
       include: ['pages/0018-test-svelte/src/**/*.svelte'],
