@@ -25,6 +25,16 @@ export default function App() {
       label: 'Fourth',
       content: 'Fourth content',
     },
+    {
+      id: 'fifth',
+      label: 'Fifth',
+      content: 'Fifth content',
+    },
+    {
+      id: 'sixth',
+      label: 'Sixth',
+      content: 'Sixth content',
+    },
   ] as const;
 
   return (

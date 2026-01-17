@@ -15,7 +15,7 @@
 }
 
 .tab {
-  --tabHeight: 32px;
+  --tabHeight: 42px;
   --spaceVert: 4px;
   display: flex;
   align-items: center;
@@ -63,7 +63,7 @@
 .tab:not(.active):not(:hover) + .tab:not(.active):not(:hover) {
   .tabView {
     &:after {
-      --reduction: 8px;
+      --reduction: calc(var(--spaceVert) * 3);
 
       content: '';
       position: absolute;
