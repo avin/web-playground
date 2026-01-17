@@ -8,56 +8,72 @@
 }
 
 .tabsRow {
-  --tab-gap: 4px;
-
   display: flex;
   padding: 0 16px;
-  gap: var(--tab-gap);
   position: relative;
+  margin-top: -4px;
 }
 
 .tab {
-  padding: 2px 8px;
-  margin-bottom: 4px;
-  border-radius: 8px;
+  --tabHeight: 32px;
+  --spaceVert: 4px;
+  display: flex;
+  align-items: center;
+  height: var(--tabHeight);
   position: relative;
+}
+
+.tabView {
+  // background: $light-gray5;
+  --sp1: 1px;
+  border-radius: 8px;
+  margin: 4px var(--sp1);
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  height: calc(var(--tabHeight) - var(--spaceVert) * 2);
 
   &:hover {
     background: $light-gray1;
   }
-  &.active {
+
+  .active & {
+    --sp2: 2px;
+    background: rgba($white, 1);
+    border-radius: 0;
+    padding: 0 calc(16px + var(--sp2));
+    margin: 0 calc(-8px - var(--sp2) + var(--sp1));
+    height: 100%;
+
     --tabGirth: 12px;
-
-    background: $white;
-    padding: 4px calc(8px + var(--tabGirth)) 8px;
-    margin: 0 calc(-1 * var(--tabGirth));
-
     /* prettier-ignore */
     clip-path: shape(
-      from bottom left,
-      curve to var(--tabGirth) calc(100% - var(--tabGirth)) with var(--tabGirth) 100%,
-      vline to var(--tabGirth),
-      curve to calc(var(--tabGirth) * 2) 0 with var(--tabGirth) 0,
-      hline to calc(100% - calc(var(--tabGirth) * 2)),
-      curve to calc(100% - var(--tabGirth)) var(--tabGirth) with calc(100% - var(--tabGirth)) 0,
-      vline to calc(100% - var(--tabGirth)),
-      curve to 100% 100% with calc(100% - var(--tabGirth)) 100%
+        from bottom left,
+        curve to var(--tabGirth) calc(100% - var(--tabGirth)) with var(--tabGirth) 100%,
+        vline to calc(var(--tabGirth) + var(--spaceVert)),
+        curve to calc(var(--tabGirth) * 2) var(--spaceVert) with var(--tabGirth) var(--spaceVert),
+        hline to calc(100% - calc(var(--tabGirth) * 2)),
+        curve to calc(100% - var(--tabGirth)) calc(var(--tabGirth) + var(--spaceVert)) with calc(100% - var(--tabGirth)) var(--spaceVert),
+        vline to calc(100% - var(--tabGirth)),
+        curve to 100% 100% with calc(100% - var(--tabGirth)) 100%
     );
   }
 }
 
 .tab:not(.active):not(:hover) + .tab:not(.active):not(:hover) {
-  &:after {
-    --reduction: 8px;
+  .tabView {
+    &:after {
+      --reduction: 8px;
 
-    content: '';
-    position: absolute;
-    display: block;
-    height: calc(100% - 2 * var(--reduction));
-    width: 1px;
-    background: $gray3;
-    top: var(--reduction);
-    left: calc(-1 * var(--tab-gap) / 2);
+      content: '';
+      position: absolute;
+      display: block;
+      height: calc(100% - 2 * var(--reduction));
+      width: 1px;
+      background: $gray3;
+      top: var(--reduction);
+      left: 0;
+    }
   }
 }
 
