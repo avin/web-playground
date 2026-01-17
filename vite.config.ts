@@ -5,6 +5,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import solid from 'vite-plugin-solid';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import vue from '@vitejs/plugin-vue';
 import { generateIndexPlugin } from './scripts/plugins/generate-index';
 import localhostCerts from 'vite-plugin-localhost-certs';
 
@@ -30,6 +31,9 @@ export default defineConfig({
     }),
     svelte({
       include: ['pages/0018-test-svelte/**/*.svelte'],
+    }),
+    vue({
+      include: ['pages/0019-test-vue/**/*.vue'],
     }),
     localhostCerts(),
     generateIndexPlugin(),
