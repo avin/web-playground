@@ -2,7 +2,9 @@ import { resolve } from 'node:path';
 import { relative } from 'node:path';
 import glob from 'fast-glob';
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { generateIndexPlugin } from './scripts/plugins/generate-index';
+import localhostCerts from 'vite-plugin-localhost-certs';
 
 export default defineConfig({
   root: '.',
@@ -17,7 +19,17 @@ export default defineConfig({
       input: getHtmlEntries(),
     },
   },
-  plugins: [generateIndexPlugin()],
+  plugins: [
+    react({
+      include: ['pages/0016-test-react/**/*.{ts,tsx,js,jsx}'],
+    }),
+    localhostCerts(),
+    generateIndexPlugin(),
+  ],
+  server: {
+    host: '0.0.0.0',
+    port: 8888,
+  },
 });
 
 // Функция поиска HTML файлов для сборки
