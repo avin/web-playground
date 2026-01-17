@@ -3,6 +3,7 @@ import { relative } from 'node:path';
 import glob from 'fast-glob';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import solid from 'vite-plugin-solid';
 import { generateIndexPlugin } from './scripts/plugins/generate-index';
 import localhostCerts from 'vite-plugin-localhost-certs';
 
@@ -22,6 +23,9 @@ export default defineConfig({
   plugins: [
     react({
       include: ['pages/0016-test-react/**/*.{ts,tsx,js,jsx}'],
+    }),
+    solid({
+      include: ['pages/0017-test-solid/**/*.{ts,tsx,js,jsx}'],
     }),
     localhostCerts(),
     generateIndexPlugin(),
