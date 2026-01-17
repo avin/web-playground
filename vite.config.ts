@@ -4,6 +4,7 @@ import glob from 'fast-glob';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import solid from 'vite-plugin-solid';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { generateIndexPlugin } from './scripts/plugins/generate-index';
 import localhostCerts from 'vite-plugin-localhost-certs';
 
@@ -26,6 +27,9 @@ export default defineConfig({
     }),
     solid({
       include: ['pages/0017-test-solid/**/*.{ts,tsx,js,jsx}'],
+    }),
+    svelte({
+      include: ['pages/0018-test-svelte/**/*.svelte'],
     }),
     localhostCerts(),
     generateIndexPlugin(),

@@ -27,6 +27,5 @@
       "~common/*": ["./common/*"]
     }
   },
-  "include": ["pages", "vite-env.d.ts"],
-  "exclude": ["pages/0016-test-react", "pages/0017-test-solid"]
+  "include": ["pages/**/*.ts", "vite-env.d.ts"]
 }
