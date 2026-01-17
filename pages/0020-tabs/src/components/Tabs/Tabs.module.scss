@@ -8,9 +8,11 @@
 }
 
 .tabsRow {
+  --tab-gap: 4px;
+
   display: flex;
   padding: 0 16px;
-  gap: 4px;
+  gap: var(--tab-gap);
   position: relative;
 }
 
@@ -55,7 +57,7 @@
     width: 1px;
     background: $gray3;
     top: var(--reduction);
-    left: -2px;
+    left: calc(-1 * var(--tab-gap) / 2);
   }
 }
 

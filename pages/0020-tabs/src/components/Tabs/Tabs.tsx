@@ -27,8 +27,9 @@ export function Tabs(props: Props) {
               class={styles.tab}
               classList={{ [styles.active]: tab.id === props.activeTab }}
               onClick={() => props.onSelect(tab.id)}
+              disabled={tab.id === props.activeTab}
             >
-              {tab.label}
+              <div class={styles.tabView}>{tab.label}</div>
             </button>
           )}
         </For>

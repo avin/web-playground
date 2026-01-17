@@ -29,7 +29,7 @@ export default function App() {
 
   return (
     <div class="p-4">
-      <h1 class="font-bold mb-4">Tabs</h1>
+      <h1 class="font-bold mb-4">Chrome like tabs</h1>
 
       <Tabs
         tabs={tabOptions}
