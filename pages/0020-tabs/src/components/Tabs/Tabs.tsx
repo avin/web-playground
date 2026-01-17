@@ -30,7 +30,7 @@ export function Tabs(props: Props) {
               disabled={tab.id === props.activeTab}
             >
               <div class={styles.tabView}>
-                <div>{tab.label}</div>
+                <div class={styles.tabInner}>{tab.label}</div>
               </div>
             </button>
           )}
