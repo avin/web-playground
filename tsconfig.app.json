@@ -27,5 +27,6 @@
       "~common/*": ["./common/*"]
     }
   },
-  "include": ["pages/**/*.ts", "vite-env.d.ts"]
+  //  "include": ["pages/**/*.ts", "vite-env.d.ts"]
+  "include": ["pages", "common"]
 }

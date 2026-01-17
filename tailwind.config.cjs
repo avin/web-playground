@@ -115,6 +115,7 @@ module.exports = {
   content: [
     './pages/**/*.{html,js,ts,jsx,tsx}',
     './common/**/*.{html,js,ts,jsx,tsx}',
+    '!**/node_modules/**/*',
   ],
   theme: {
     extend: {
