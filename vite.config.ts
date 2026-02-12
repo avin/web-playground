@@ -30,6 +30,7 @@ export default defineConfig({
       include: [
         'pages/0017-test-solid/src/**/*.{ts,tsx,js,jsx}',
         'pages/0020-tabs/src/**/*.{ts,tsx,js,jsx}',
+        'pages/0021-card-form/src/**/*.{ts,tsx,js,jsx}',
       ],
     }),
     svelte({
