@@ -26,13 +26,6 @@ export function CardForm(props: CardFormProps) {
         </div>
       </div>
 
-      <div class={styles.save}>
-        <div class={styles.checkbox}>
-          <input type="checkbox" id="save" />
-          <label for="save">Запомнить карту</label>
-        </div>
-      </div>
-
       <div class={styles.date}>
         <div class={styles.field}>
           <label>ММ/ГГ</label>
@@ -46,6 +39,13 @@ export function CardForm(props: CardFormProps) {
         <div class={styles.field}>
           <label>CVC/CVV</label>
           <input type="password" placeholder="***" />
+        </div>
+      </div>
+
+      <div class={styles.save}>
+        <div class={styles.checkbox}>
+          <input type="checkbox" id="save" />
+          <label for="save">Запомнить карту</label>
         </div>
       </div>
     </div>
