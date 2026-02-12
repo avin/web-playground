@@ -23,7 +23,7 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
   position: relative;
   width: fit-content;
 
-  // Карта все
+  // Карта
   &::before,
   &::after {
     content: '';
@@ -53,11 +53,11 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
 
   // Сетка областей (теперь с учетом слоев)
   grid-template-areas:
-    '. .      .      . .      .      . '
-    '. logos  logos  . .      .      . '
-    '. number number . stripe stripe stripe'
-    '. save   date   . .      cvc    . '
-    '. .      .      . .      .      . ';
+    '.  .       .      .  .       .       .       '
+    '.  logos   logos  .  .       .       .       '
+    '.  number  number .  stripe  stripe  stripe  '
+    '.  save    date   .  .       cvc     .       '
+    '.  .       .      .  .       .       .       ';
 }
 
 // ЭЛЕМЕНТЫ (выносим их над фоном через z-index)
