@@ -33,7 +33,6 @@ export function CardForm(props: CardFormProps) {
         </div>
       </div>
 
-      {/* Задняя часть */}
       <div class={styles.stripe} />
       <div class={styles.cvc}>
         <div class={styles.field}>
