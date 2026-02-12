@@ -1,5 +1,8 @@
 .container {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   gap: 8px;
 }
 
@@ -18,4 +21,18 @@
   background: #5e6d81;
   border-color: #5e6d81;
   color: #fff;
+}
+
+.autoToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #444;
+  font-size: 14px;
+  font-family: sans-serif;
+
+  input {
+    width: 16px;
+    height: 16px;
+  }
 }
