@@ -1,16 +1,17 @@
 import styles from './CardForm.module.scss';
+import logosImgSrc from './images/logos.svg';
 
 export function CardForm() {
   return (
     <div class={styles.container}>
       <div class={`${styles.element} ${styles.logos}`}>
-        <span>VISA</span> <span>МИР</span>
+        <img src={logosImgSrc} alt="" />
       </div>
 
       <div class={styles.number}>
         <div class={styles.field}>
           <label>Номер карты</label>
-          <input type="text" placeholder="4111 1111 1111 1111" />
+          <input type="text" placeholder="0000 0000 0000 0000" />
         </div>
       </div>
 
@@ -24,7 +25,7 @@ export function CardForm() {
       <div class={styles.date}>
         <div class={styles.field}>
           <label>ММ/ГГ</label>
-          <input type="text" placeholder="12/29" />
+          <input type="text" placeholder="00/00" />
         </div>
       </div>
 

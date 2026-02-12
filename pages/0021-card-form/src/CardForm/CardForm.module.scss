@@ -1,16 +1,16 @@
-$col1: 20px;
-$col2: 200px;
-$col3: 100px;
-$col4: 20px;
-$col5: 20px;
-$col6: 100px;
-$col7: 20px;
+$col1: 16px;
+$col2: 180px;
+$col3: 80px;
+$col4: 16px;
+$col5: 16px;
+$col6: 80px;
+$col7: 16px;
 
-$row1: 20px;
-$row2: 40px;
-$row3: 80px;
-$row4: 80px;
-$row5: 20px;
+$row1: 16px;
+$row2: 32px;
+$row3: 70px;
+$row4: 60px;
+$row5: 16px;
 
 $cardWidth: #{$col1 + $col2 + $col3 + $col4};
 $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
@@ -37,7 +37,7 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
 
   // Задняя карта
   &::before {
-    top: 28px;
+    top: 24px;
     right: 0;
     background: #efefef;
     z-index: 1;
@@ -67,13 +67,7 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
 
 .logos {
   grid-area: logos;
-  display: flex;
-  gap: 12px;
-  //align-items: center;
-  font-family: sans-serif;
-  font-weight: 900;
-  color: #5e6d81;
-  opacity: 0.6;
+  height: 16px;
 }
 
 .field {
@@ -89,15 +83,13 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
   label {
     font-size: 11px;
     color: #a5a5a5;
-    margin-bottom: 4px;
     font-family: sans-serif;
   }
 
   input {
     border: none;
     outline: none;
-    font-size: 18px;
-    letter-spacing: 1px;
+    font-size: 16px;
     width: 100%;
     color: #333;
   }
@@ -128,7 +120,6 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
   grid-area: save;
   z-index: 3;
   display: flex;
-  // padding-top: 18px;
   gap: 10px;
   font-size: 14px;
   font-family: sans-serif;
@@ -152,5 +143,5 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
   grid-area: stripe;
   z-index: 2;
   background: #dbdbdb;
-  height: 60%;
+  height: 48px;
 }
