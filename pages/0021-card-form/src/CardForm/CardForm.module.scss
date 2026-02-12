@@ -99,8 +99,11 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
     'save save save';
 }
 
-// ЭЛЕМЕНТЫ (выносим их над фоном через z-index)
-.element {
+.logos,
+.number,
+.date,
+.cvc,
+.save {
   z-index: 3;
 }
 
@@ -110,7 +113,6 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
 }
 
 .field {
-  grid-area: var(--area);
   background: white;
   border: 1px solid #d3d4d8;
   border-radius: 8px;
@@ -134,18 +136,14 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
   }
 }
 
-// Позиционируем через переменные
 .number {
   grid-area: number;
-  z-index: 3;
 }
 .date {
   grid-area: date;
-  z-index: 3;
 }
 .cvc {
   grid-area: cvc;
-  z-index: 3;
 }
 
 .checkbox {
@@ -157,7 +155,6 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
 
 .save {
   grid-area: save;
-  z-index: 3;
   display: flex;
   gap: 10px;
   font-size: 14px;

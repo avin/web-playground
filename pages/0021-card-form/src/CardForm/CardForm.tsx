@@ -15,7 +15,7 @@ export function CardForm(props: CardFormProps) {
         [styles.nizko]: props.layoutMode === 'nizko',
       }}
     >
-      <div class={`${styles.element} ${styles.logos}`}>
+      <div class={styles.logos}>
         <img src={logosImgSrc} alt="" />
       </div>
 
