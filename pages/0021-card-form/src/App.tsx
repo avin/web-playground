@@ -1,9 +1,15 @@
+import { createSignal } from 'solid-js';
 import { CardForm } from './CardForm/CardForm.tsx';
+import { CardFormModeSwitch } from './CardFormModeSwitch/CardFormModeSwitch.tsx';
+import type { LayoutMode } from './CardForm/layoutMode.ts';
 
 export default function App() {
+  const [layoutMode, setLayoutMode] = createSignal<LayoutMode>('normal');
+
   return (
-    <div class="flex justify-center mt-[50px]">
-      <CardForm />
+    <div class="mt-[50px] flex flex-col items-center gap-5">
+      <CardFormModeSwitch value={layoutMode()} onChange={setLayoutMode} />
+      <CardForm layoutMode={layoutMode()} />
     </div>
   );
 }

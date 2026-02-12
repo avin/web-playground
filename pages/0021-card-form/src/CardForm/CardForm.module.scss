@@ -60,6 +60,42 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
     '.  .       .      .  .       .       .       ';
 }
 
+.uzko,
+.nizko {
+  width: min(100%, 560px);
+  gap: 10px;
+
+  &::before,
+  &::after {
+    display: none;
+  }
+
+  .logos,
+  .stripe {
+    display: none;
+  }
+}
+
+.uzko {
+  grid-template-columns: repeat(2, minmax(160px, 1fr));
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    'number number'
+    'date cvc'
+    'save save';
+}
+
+.nizko {
+  grid-template-columns: minmax(220px, 1fr) minmax(110px, 140px) minmax(
+      110px,
+      140px
+    );
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    'number date cvc'
+    'save save save';
+}
+
 // ЭЛЕМЕНТЫ (выносим их над фоном через z-index)
 .element {
   z-index: 3;
@@ -137,6 +173,11 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
       background: #5e6d81;
     }
   }
+}
+
+.uzko .checkbox,
+.nizko .checkbox {
+  height: auto;
 }
 
 .stripe {

@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  gap: 8px;
+}
+
+.button {
+  border: 1px solid #d3d4d8;
+  border-radius: 8px;
+  background: #fff;
+  color: #444;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: sans-serif;
+  cursor: pointer;
+}
+
+.buttonActive {
+  background: #5e6d81;
+  border-color: #5e6d81;
+  color: #fff;
+}

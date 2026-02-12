@@ -1,9 +1,20 @@
 import styles from './CardForm.module.scss';
 import logosImgSrc from './images/logos.svg';
+import type { LayoutMode } from './layoutMode.ts';
 
-export function CardForm() {
+type CardFormProps = {
+  layoutMode: LayoutMode;
+};
+
+export function CardForm(props: CardFormProps) {
   return (
-    <div class={styles.container}>
+    <div
+      class={styles.container}
+      classList={{
+        [styles.uzko]: props.layoutMode === 'uzko',
+        [styles.nizko]: props.layoutMode === 'nizko',
+      }}
+    >
       <div class={`${styles.element} ${styles.logos}`}>
         <img src={logosImgSrc} alt="" />
       </div>
