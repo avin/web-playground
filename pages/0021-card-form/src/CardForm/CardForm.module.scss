@@ -51,7 +51,7 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
     z-index: 2;
   }
 
-  // Сетка областей (теперь с учетом слоев)
+  // Сетка областей
   grid-template-areas:
     '.  .       .      .  .       .       .       '
     '.  logos   logos  .  .       .       .       '
@@ -60,6 +60,7 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
     '.  .       .      .  .       .       .       ';
 }
 
+// Компактные режимы: убираем визуал карты и оставляем только поля формы.
 .uzko,
 .nizko {
   width: min(100%, 560px);
@@ -76,6 +77,7 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
   }
 }
 
+// Режим "узко": 3 строки (PAN, затем expiry+cvc, затем save).
 .uzko {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: auto auto auto;
@@ -85,6 +87,7 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
     'save save';
 }
 
+// Режим "низко": 2 строки (PAN+expiry+cvc, затем save).
 .nizko {
   grid-template-columns: minmax(220px, 1fr) minmax(80px, 120px) minmax(
       80px,
@@ -175,6 +178,7 @@ $cardHeight: #{$row1 + $row2 + $row3 + $row4 + $row5};
   }
 }
 
+// В компактных режимах чекбоксу не нужна фиксированная высота строки.
 .uzko .checkbox,
 .nizko .checkbox {
   height: auto;
