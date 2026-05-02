@@ -69,6 +69,10 @@ interface ActiveRect {
   element: HTMLDivElement;
   age: number;
   maxAge: number;
+  startX: number;
+  startY: number;
+  width: number;
+  height: number;
 }
 
 const activeRects: ActiveRect[] = [];
@@ -78,12 +82,14 @@ function addRectangle(): void {
   const pos = getGaussianPosition();
   const width = 220 + Math.random() * 80;
   const height = 120 + Math.random() * 40;
+  const startX = pos.x - width / 2;
+  const startY = pos.y - height / 2;
 
   // Контейнер message box
   const box = document.createElement('div');
   box.style.position = 'absolute';
-  box.style.left = `${pos.x - width / 2}px`;
-  box.style.top = `${pos.y - height / 2}px`;
+  box.style.left = `${startX}px`;
+  box.style.top = `${startY}px`;
   box.style.width = `${width}px`;
   box.style.height = `${height}px`;
   box.style.backgroundColor = '#f0f0f0';
@@ -174,6 +180,10 @@ function addRectangle(): void {
     element: box,
     age: 0,
     maxAge: 300,
+    startX,
+    startY,
+    width,
+    height,
   });
 }
 
@@ -194,10 +204,20 @@ function updateRects(): void {
     const blur = progress * 15;
     const opacity = 1 - progress;
 
+    // Очень медленное сужение к центру
+    const slowProgress = Math.pow(progress, 1.8);
+    const centerOffsetX =
+      (centerX - rect.width / 2 - rect.startX) * slowProgress * 0.05;
+    const centerOffsetY =
+      (centerY - rect.height / 2 - rect.startY) * slowProgress * 0.05;
+
+    rect.element.style.left = `${rect.startX + centerOffsetX}px`;
+    rect.element.style.top = `${rect.startY + centerOffsetY}px`;
     rect.element.style.filter = `blur(${blur}px)`;
     rect.element.style.opacity = `${opacity}`;
 
-    const shrinkFactor = 1 - progress * 0.08;
+    // Лёгкое уменьшение для эффекта перспективы
+    const shrinkFactor = 1 - slowProgress * 0.25;
     rect.element.style.transform = `scale(${shrinkFactor})`;
   }
 }
