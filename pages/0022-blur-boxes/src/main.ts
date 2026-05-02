@@ -1,16 +1,29 @@
-// Создаём контейнер для анимации
+// Устанавливаем фон body
+document.body.style.margin = '0';
+document.body.style.padding = '0';
+document.body.style.backgroundColor = '#1a1a2e';
+document.body.style.overflow = 'hidden';
+
+// Создаём контейнер для анимации на весь экран
 const container = document.createElement('div');
-container.style.position = 'relative';
-container.style.width = '800px';
-container.style.height = '800px';
-container.style.border = '1px solid #000';
+container.style.position = 'fixed';
+container.style.top = '0';
+container.style.left = '0';
+container.style.width = '100vw';
+container.style.height = '100vh';
 container.style.overflow = 'hidden';
-container.style.backgroundColor = '#1a1a2e';
 document.body.appendChild(container);
 
-const centerX = 400;
-const centerY = 400;
-const spread = 80; // стандартное отклонение для Гаусса
+// Вычисляем центр экрана
+let centerX = window.innerWidth / 2;
+let centerY = window.innerHeight / 2;
+const spread = 120; // стандартное отклонение для Гаусса
+
+// Обновляем центр при изменении размера окна
+window.addEventListener('resize', () => {
+  centerX = window.innerWidth / 2;
+  centerY = window.innerHeight / 2;
+});
 
 // Генератор случайных чисел по Гауссовскому распределению (Box-Muller)
 function gaussianRandom(): number {
@@ -160,7 +173,7 @@ function addRectangle(): void {
   activeRects.push({
     element: box,
     age: 0,
-    maxAge: 200,
+    maxAge: 300,
   });
 }
 
