@@ -17,7 +17,15 @@ document.body.appendChild(container);
 // Вычисляем центр экрана
 let centerX = window.innerWidth / 2;
 let centerY = window.innerHeight / 2;
-const spread = 120; // стандартное отклонение для Гаусса
+
+const spread = 120;
+
+// Настройки анимации
+const SPAWN_INTERVAL_MS = 75;
+const MAX_RECTS = 95;
+const MAX_FRAME_DELTA_MS = 50;
+
+let nextZIndex = 1000;
 
 // Обновляем центр при изменении размера окна
 window.addEventListener('resize', () => {
@@ -25,12 +33,14 @@ window.addEventListener('resize', () => {
   centerY = window.innerHeight / 2;
 });
 
-// Генератор случайных чисел по Гауссовскому распределению (Box-Muller)
+// Генератор случайных чисел по Гауссовскому распределению
 function gaussianRandom(): number {
-  let u = 0,
-    v = 0;
+  let u = 0;
+  let v = 0;
+
   while (u === 0) u = Math.random();
   while (v === 0) v = Math.random();
+
   return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
 }
 
@@ -61,31 +71,73 @@ function getRandomErrorMessage(): string {
     'Invalid operation',
     'Runtime error #42',
   ];
+
   return messages[Math.floor(Math.random() * messages.length)];
+}
+
+function clamp01(value: number): number {
+  return Math.max(0, Math.min(1, value));
+}
+
+function smoothstep(edge0: number, edge1: number, x: number): number {
+  const t = clamp01((x - edge0) / (edge1 - edge0));
+  return t * t * (3 - 2 * t);
+}
+
+function lerp(a: number, b: number, t: number): number {
+  return a + (b - a) * t;
+}
+
+function easeInCubic(t: number): number {
+  return t * t * t;
+}
+
+function easeOutQuart(t: number): number {
+  return 1 - Math.pow(1 - t, 4);
+}
+
+function easeOutBack(t: number): number {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
 
 // Интерфейс для активных элементов
 interface ActiveRect {
   element: HTMLDivElement;
-  age: number;
-  maxAge: number;
+  ageMs: number;
+  maxAgeMs: number;
   startX: number;
   startY: number;
   width: number;
   height: number;
+
+  rotation: number;
+  impactX: number;
+  impactY: number;
 }
 
 const activeRects: ActiveRect[] = [];
 
+let lastFrameTime = performance.now();
+let spawnAccumulator = 0;
+
 // Создать новый message box с ошибкой
 function addRectangle(): void {
+  if (activeRects.length >= MAX_RECTS) {
+    const oldest = activeRects.shift();
+    oldest?.element.remove();
+  }
+
   const pos = getGaussianPosition();
+
   const width = 220 + Math.random() * 80;
   const height = 120 + Math.random() * 40;
+
   const startX = pos.x - width / 2;
   const startY = pos.y - height / 2;
 
-  // Контейнер message box
   const box = document.createElement('div');
   box.style.position = 'absolute';
   box.style.left = `${startX}px`;
@@ -102,6 +154,16 @@ function addRectangle(): void {
   box.style.overflow = 'hidden';
   box.style.fontFamily = 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif';
 
+  box.style.willChange = 'transform, opacity, filter';
+  box.style.transformOrigin = 'center center';
+  box.style.backfaceVisibility = 'hidden';
+  box.style.contain = 'layout paint style';
+  box.style.opacity = '0';
+  box.style.transform = 'translate3d(0, 0, 0) scale(0.68)';
+
+  // Важно: каждое новое окно получает z-index больше предыдущего
+  box.style.zIndex = `${nextZIndex++}`;
+
   // Шапка с иконкой ошибки и заголовком
   const header = document.createElement('div');
   header.style.background = 'linear-gradient(180deg, #ff6b6b 0%, #ee5a5a 100%)';
@@ -111,7 +173,7 @@ function addRectangle(): void {
   header.style.gap = '8px';
   header.style.borderBottom = '1px solid #cc4444';
 
-  // Иконка ошибки (красный круг с X)
+  // Иконка ошибки
   const icon = document.createElement('div');
   icon.style.width = '18px';
   icon.style.height = '18px';
@@ -151,7 +213,7 @@ function addRectangle(): void {
   messageText.style.lineHeight = '1.4';
   messageText.textContent = getRandomErrorMessage();
 
-  // Кнопка OK (декоративная)
+  // Кнопка OK
   const buttonContainer = document.createElement('div');
   buttonContainer.style.display = 'flex';
   buttonContainer.style.justifyContent = 'flex-end';
@@ -169,31 +231,38 @@ function addRectangle(): void {
   okButton.textContent = 'OK';
 
   buttonContainer.appendChild(okButton);
+
   body.appendChild(messageText);
   body.appendChild(buttonContainer);
 
   box.appendChild(header);
   box.appendChild(body);
+
   container.appendChild(box);
 
   activeRects.push({
     element: box,
-    age: 0,
-    maxAge: 300,
+    ageMs: 0,
+    maxAgeMs: 3200 + Math.random() * 1100,
     startX,
     startY,
     width,
     height,
+
+    rotation: (Math.random() - 0.5) * 10,
+    impactX: (Math.random() - 0.5) * 34,
+    impactY: (Math.random() - 0.5) * 24,
   });
 }
 
 // Обновить все прямоугольники
-function updateRects(): void {
+function updateRects(deltaMs: number): void {
   for (let i = activeRects.length - 1; i >= 0; i--) {
     const rect = activeRects[i];
-    rect.age++;
 
-    const progress = rect.age / rect.maxAge;
+    rect.ageMs += deltaMs;
+
+    const progress = clamp01(rect.ageMs / rect.maxAgeMs);
 
     if (progress >= 1) {
       rect.element.remove();
@@ -201,36 +270,93 @@ function updateRects(): void {
       continue;
     }
 
-    const blur = progress * 15;
-    const opacity = 1 - progress;
+    // Быстрое появление с overshoot
+    const appearProgress = smoothstep(0.0, 0.11, progress);
+    const appearOpacity = smoothstep(0.0, 0.055, progress);
 
-    // Очень медленное сужение к центру
-    const slowProgress = Math.pow(progress, 1.8);
+    const popScale = lerp(0.68, 1.0, easeOutBack(appearProgress));
+
+    // Короткий "ударный" дрейф при появлении
+    const impactProgress = 1 - easeOutQuart(appearProgress);
+    const impactOffsetX = rect.impactX * impactProgress;
+    const impactOffsetY = rect.impactY * impactProgress;
+
+    // Движение к центру:
+    // чуть заметнее, чтобы окно не выглядело статичным
+    const moveProgress = easeInCubic(progress);
+
     const centerOffsetX =
-      (centerX - rect.width / 2 - rect.startX) * slowProgress * 0.05;
-    const centerOffsetY =
-      (centerY - rect.height / 2 - rect.startY) * slowProgress * 0.05;
+      (centerX - rect.width / 2 - rect.startX) * moveProgress * 0.11;
 
-    rect.element.style.left = `${rect.startX + centerOffsetX}px`;
-    rect.element.style.top = `${rect.startY + centerOffsetY}px`;
+    const centerOffsetY =
+      (centerY - rect.height / 2 - rect.startY) * moveProgress * 0.11;
+
+    // Blur начинается раньше, но растёт мягко
+    const blurProgress = smoothstep(0.34, 0.96, progress);
+    const blur = Math.pow(blurProgress, 1.75) * 18;
+
+    // Fade начинается раньше, чтобы демка не зависала визуально
+    const fadeProgress = smoothstep(0.58, 0.96, progress);
+    const fadeOpacity = 1 - Math.pow(fadeProgress, 1.35);
+
+    const opacity = appearOpacity * fadeOpacity;
+
+    // Перспективное уменьшение
+    const shrinkProgress = smoothstep(0.12, 1.0, progress);
+    const shrinkFactor = 1 - shrinkProgress * 0.32;
+
+    // Небольшой поворот при появлении, который быстро выравнивается
+    const rotationSettle = 1 - smoothstep(0.0, 0.22, progress);
+    const rotationDrift = smoothstep(0.55, 1.0, progress) * 0.25;
+
+    const rotation =
+      rect.rotation * rotationSettle + rect.rotation * rotationDrift;
+
+    const translateX = centerOffsetX + impactOffsetX;
+    const translateY = centerOffsetY + impactOffsetY;
+
+    const scale = popScale * shrinkFactor;
+
     rect.element.style.filter = `blur(${blur}px)`;
     rect.element.style.opacity = `${opacity}`;
-
-    // Лёгкое уменьшение для эффекта перспективы
-    const shrinkFactor = 1 - slowProgress * 0.25;
-    rect.element.style.transform = `scale(${shrinkFactor})`;
+    rect.element.style.transform = `
+      translate3d(${translateX}px, ${translateY}px, 0)
+      rotate(${rotation}deg)
+      scale(${scale})
+    `;
   }
 }
 
 // Анимационный цикл
-function animate(): void {
-  updateRects();
+function animate(now: number): void {
+  if (document.hidden) {
+    lastFrameTime = now;
+    spawnAccumulator = 0;
+    requestAnimationFrame(animate);
+    return;
+  }
+
+  const deltaMs = Math.min(now - lastFrameTime, MAX_FRAME_DELTA_MS);
+  lastFrameTime = now;
+
+  spawnAccumulator += deltaMs;
+
+  while (spawnAccumulator >= SPAWN_INTERVAL_MS) {
+    addRectangle();
+    spawnAccumulator -= SPAWN_INTERVAL_MS;
+  }
+
+  updateRects(deltaMs);
+
   requestAnimationFrame(animate);
 }
 
-// Добавлять message box каждые ~100мс
-setInterval(addRectangle, 100);
+// Сброс таймеров при возврате на страницу
+document.addEventListener('visibilitychange', () => {
+  lastFrameTime = performance.now();
+  spawnAccumulator = 0;
+});
 
-// Запускаем
+// Запуск
 addRectangle();
-animate();
+requestAnimationFrame(animate);

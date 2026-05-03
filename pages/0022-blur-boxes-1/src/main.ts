@@ -1,4 +1,3 @@
-// Создаём контейнер для анимации
 const container = document.createElement('div');
 container.style.position = 'relative';
 container.style.width = '800px';
@@ -106,6 +105,6 @@ function animate(): void {
 // Добавлять прямоугольник каждые ~100мс
 setInterval(addRectangle, 50);
 
-// Запускаем
+// Run!
 addRectangle();
 animate();
