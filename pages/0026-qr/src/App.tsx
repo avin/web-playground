@@ -26,12 +26,12 @@ export default function App() {
     // квадрат под логотип (~14% модулей), нужна подстраховка уровня H (~30%).
     const qrCode = new QRCode({
       content: SBP_PAYLOAD,
-      ecl: 'H',
+      ecl: 'M',
     });
 
     // Вырезаем нечётный по размеру квадрат в центре, чтобы логотип был чётко
     // выровнен по границам модулей (нечётный размер = идеальное центрирование).
-    const emptyCenterSize = 2 * Math.round((qrCode.size * 0.38) / 2) - 1;
+    const emptyCenterSize = 2 * Math.round((qrCode.size * 0.5) / 2) - 1;
     qrCode.emptyCenter(emptyCenterSize);
 
     const qrSvg = new QRSvg(qrCode, {
