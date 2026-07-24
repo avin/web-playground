@@ -14,26 +14,26 @@ type Variant = {
 
 const variants: Variant[] = [
   {
-    label: 'Градиент · рамка · скруглённый · perfect',
+    label: 'Градиент · рамка',
     perfectSize: true,
     withFrame: true,
     rounded: true,
   },
   {
-    label: 'Градиент · без рамки · скруглённый · perfect',
+    label: 'Градиент · без рамки',
     perfectSize: true,
     withFrame: false,
     rounded: true,
   },
   {
-    label: 'Фикс. цвет #1e0843 · рамка · скруглённый',
+    label: 'Фикс. цвет #1e0843 · рамка',
     perfectSize: true,
     withFrame: true,
     rounded: true,
     color: '#1e0843',
   },
   {
-    label: 'Фикс. цвет #e63946 · без рамки · скруглённый',
+    label: 'Фикс. цвет #e63946 · без рамки',
     perfectSize: true,
     withFrame: false,
     rounded: true,
