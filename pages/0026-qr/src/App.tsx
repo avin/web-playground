@@ -8,6 +8,18 @@ import styles from './App.module.scss';
 const SBP_PAYLOAD = 'https://sbp.nspk.ru/';
 const BASE_SIZE = 400; // базовый размер QR — уточняется до perfect-fit ниже
 
+// Вертикальный градиент заливки QR: сверху #0BD3D6, снизу #209FFF.
+// Path-ы sexy-qr наследуют fill корневого <svg>, поэтому достаточно
+// объявить градиент в <defs> и подсунуть url(#...) в опцию fill.
+// <image> логотипа fill не наследует — остаётся с исходными цветами.
+//
+// ВАЖНО: gradientUnits="userSpaceOnUse" + реальная высота QR в px, а НЕ дефолтный
+// objectBoundingBox. Иначе координаты 0..1 считаются от bounding box КАЖДОГО path —
+// и каждый модуль получит свой персональный мини-градиент вместо одного общего.
+const GRADIENT_ID = 'qrGradient';
+const GRADIENT_TOP = '#0BD3D6';
+const GRADIENT_BOTTOM = '#209FFF';
+
 export default function App() {
   const svgCode = useMemo(() => {
     // Высший уровень коррекции ошибок: в центре QR вырезается большой
@@ -23,7 +35,13 @@ export default function App() {
     qrCode.emptyCenter(emptyCenterSize);
 
     const qrSvg = new QRSvg(qrCode, {
-      fill: '#171717',
+      fill: `url(#${GRADIENT_ID})`,
+      preContent: (q) => {
+        // Высота QR в px = число модулей × размер модуля. Один общий градиент
+        // по всей высоте в координатах всего <svg> (userSpaceOnUse).
+        const h = q.matrixSize * q.pointSize;
+        return `<defs><linearGradient id="${GRADIENT_ID}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="${h}"><stop offset="0" stop-color="${GRADIENT_TOP}"/><stop offset="1" stop-color="${GRADIENT_BOTTOM}"/></linearGradient></defs>`;
+      },
       // "Умный" размер: каждая ячейка матрицы = целое число пикселей.
       size: nearestSizeToPerfectFitCells(BASE_SIZE, qrCode.size),
       outerCornerRadius: 0,
