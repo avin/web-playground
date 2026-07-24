@@ -24,7 +24,10 @@ export default defineConfig({
   },
   plugins: [
     react({
-      include: ['pages/0016-test-react/src/**/*.{ts,tsx,js,jsx}'],
+      include: [
+        'pages/0016-test-react/src/**/*.{ts,tsx,js,jsx}',
+        'pages/0026-qr/src/**/*.{ts,tsx,js,jsx}',
+      ],
     }),
     solid({
       include: [

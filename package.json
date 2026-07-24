@@ -49,6 +49,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "sass-embedded": "^1.97.2",
+    "sexy-qr": "^2.0.0",
     "solid-js": "^1.9.10",
     "svelte": "^5.46.4",
     "vite-plugin-localhost-certs": "^1.1.3",

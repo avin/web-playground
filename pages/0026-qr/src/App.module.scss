@@ -1,0 +1,21 @@
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #f4f4f4;
+}
+
+.qr {
+  display: flex;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+}
