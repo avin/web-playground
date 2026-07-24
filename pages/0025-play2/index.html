@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Play</title>
+
+    <style type="text/css">
+      .ticket {
+        width: 1100px;
+        font-family: Arial, sans-serif;
+        color: #0b1f44;
+        font-size: 15px;
+      }
+
+      .flight {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+
+      .flight td {
+        vertical-align: top;
+      }
+
+      .times {
+        position: relative;
+        width: 125px;
+        height: 260px;
+      }
+
+      .time {
+        position: absolute;
+        left: 28px;
+        white-space: nowrap;
+      }
+
+      .time-top {
+        top: 12px;
+      }
+
+      .time-bottom {
+        bottom: 18px;
+      }
+
+      .time b {
+        font-size: 26px;
+        line-height: 28px;
+      }
+
+      .time span {
+        font-size: 18px;
+      }
+
+      .rail {
+        position: relative;
+        width: 85px;
+        height: 260px;
+      }
+
+      .rail-line {
+        position: absolute;
+        left: 40px;
+        top: 28px;
+        width: 0;
+        height: 208px;
+        border-left: 4px solid #2853d8;
+        z-index: 1;
+      }
+
+      .dot {
+        position: absolute;
+        left: 28px;
+        width: 20px;
+        height: 20px;
+        border: 4px solid #2853d8;
+        background: #ffffff;
+        border-radius: 14px;
+        font-size: 0;
+        line-height: 0;
+        z-index: 2;
+      }
+
+      .dot-top {
+        top: 14px;
+      }
+
+      .dot-bottom {
+        top: 222px;
+      }
+
+      .duration {
+        position: absolute;
+        left: -12px;
+        top: 130px;
+        width: 140px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        color: #52617d;
+        background: #ffffff;
+        z-index: 3;
+      }
+
+      .route {
+        position: relative;
+        width: 295px;
+        height: 260px;
+      }
+
+      .city {
+        position: absolute;
+        left: 0;
+      }
+
+      .city-top {
+        top: 13px;
+      }
+
+      .city-bottom {
+        bottom: 18px;
+      }
+
+      .city b {
+        font-size: 28px;
+        line-height: 30px;
+      }
+
+      .city span {
+        font-size: 18px;
+      }
+
+      em {
+        font-style: normal;
+        display: inline-block;
+        padding: 1px 8px;
+        border: 1px solid #6c7890;
+        border-radius: 8px;
+      }
+
+      .details {
+        width: 300px;
+        padding-top: 15px;
+      }
+
+      .details-right {
+        width: 285px;
+      }
+
+      .details table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .details td {
+        padding: 0 10px 12px 0;
+        white-space: nowrap;
+        font-size: 15px;
+      }
+
+      .details .label {
+        color: #687692;
+      }
+
+      .details .value {
+        color: #102244;
+      }
+
+      .note {
+        margin: 14px 0 0 0;
+        font-size: 15px;
+        line-height: 22px;
+        white-space: nowrap;
+      }
+
+      .chip {
+        display: inline-block;
+        margin: 8px 0 0 0;
+        padding: 3px 8px;
+        border: 1px solid #102244;
+        font-size: 15px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="ticket">
+      <table class="flight" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="times">
+            <div class="time time-top">
+              <b>8:15</b><br />
+              <span>31 сен 2025</span>
+            </div>
+
+            <div class="time time-bottom">
+              <b>8:15</b><br />
+              <span>31 сен 2025</span>
+            </div>
+          </td>
+
+          <td class="rail">
+            <div class="rail-line"></div>
+            <div class="dot dot-top"></div>
+            <div class="dot dot-bottom"></div>
+            <div class="duration">В пути 8 ч 15 м</div>
+          </td>
+
+          <td class="route">
+            <div class="city city-top">
+              <b>Москва</b><br />
+              <span>SVO &#183; Шереметьево <em>терм. C</em></span>
+            </div>
+
+            <div class="city city-bottom">
+              <b>Архангельск</b><br />
+              <span>ARH &#183; Талаги</span>
+            </div>
+          </td>
+
+          <td class="details">
+            <table cellspacing="0" cellpadding="0">
+              <tr>
+                <td class="label">Перевозчик</td>
+                <td class="value">Победа</td>
+              </tr>
+              <tr>
+                <td class="label">Тип ВС</td>
+                <td class="value">Sukhoi Superjet 100</td>
+              </tr>
+              <tr>
+                <td class="label">Место</td>
+                <td class="value">Не выбрано</td>
+              </tr>
+              <tr>
+                <td class="label">Класс</td>
+                <td class="value">Эконом / N</td>
+              </tr>
+              <tr>
+                <td class="label">Агентский код</td>
+                <td class="value">RFKCMA</td>
+              </tr>
+            </table>
+
+            <p class="note">
+              &#9719; Посадка заканчивается <em>за 20 мин.</em> до времени
+              вылета
+            </p>
+            <p class="note">Техническая посадка в г. Калининград 3ч 55м</p>
+            <p class="chip">Смена терминала A &#8594; C</p>
+          </td>
+
+          <td class="details details-right">
+            <table cellspacing="0" cellpadding="0">
+              <tr>
+                <td class="label">Вид тарифа</td>
+                <td class="value">NPXRF</td>
+              </tr>
+              <tr>
+                <td class="label">Бренд</td>
+                <td class="value">Эконом Максимум</td>
+              </tr>
+              <tr>
+                <td class="label">Статус</td>
+                <td class="value">Оформлен</td>
+              </tr>
+              <tr>
+                <td class="label">Багаж</td>
+                <td class="value">&#9635; &times; 1, до 23 кг</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
