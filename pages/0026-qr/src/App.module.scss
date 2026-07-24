@@ -10,6 +10,49 @@
   gap: 24px;
 }
 
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.controlsLabel {
+  font:
+    600 13px/1.4 system-ui,
+    sans-serif;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.payloadInput {
+  width: 100%;
+  padding: 12px 14px;
+  font:
+    15px/1.4 system-ui,
+    sans-serif;
+  color: #222;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &::placeholder {
+    color: #9a9a9a;
+  }
+
+  &:focus {
+    border-color: #1e0843;
+    box-shadow: 0 0 0 3px rgba(30, 8, 67, 0.15);
+  }
+}
+
 .item {
   display: flex;
   flex-direction: column;
