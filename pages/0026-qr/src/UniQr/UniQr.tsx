@@ -43,7 +43,7 @@ const INWARD_OUTER_RADIUS = 2.8;
 
 // Рамка вокруг QR (рендерится HTML- div, не трогая SVG).
 const FRAME_COLOR = '#1e0843';
-const FRAME_WIDTH = 5; // px
+const FRAME_WIDTH = 4; // px
 const LOGO_MARGIN_CELLS = 1.25; // отступ логотипа (и рамки) от QR-контента, в клетках
 
 export default function UniQr({
