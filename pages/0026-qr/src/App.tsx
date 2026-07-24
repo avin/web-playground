@@ -44,10 +44,14 @@ export default function App() {
         return corner.defaultRadius;
       },
       postContent: () => {
-        const start =
-          (qrSvg.matrixSize / 2 - emptyCenterSize / 2) * qrSvg.pointSize +
-          qrSvg.pointSize / 2;
-        const size = emptyCenterSize * qrSvg.pointSize - qrSvg.pointSize;
+        // Край вырезанной под логотип зоны (он же — граница ближайших QR-модулей).
+        const emptyStart =
+          (qrSvg.matrixSize / 2 - emptyCenterSize / 2) * qrSvg.pointSize;
+        const emptyEdge = emptyCenterSize * qrSvg.pointSize;
+        // Отступ логотипа от QR-контента — 1.25 размера одной клетки с каждой стороны.
+        const margin = 1.25 * qrSvg.pointSize;
+        const start = emptyStart + margin;
+        const size = emptyEdge - 2 * margin;
         const logoDataUri =
           'data:image/svg+xml;base64,' +
           window.btoa(unescape(encodeURIComponent(logoSrc)));
