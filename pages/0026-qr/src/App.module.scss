@@ -1,9 +1,32 @@
 .page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
   background: #f4f4f4;
+  padding: 32px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.label {
+  font:
+    13px/1.4 system-ui,
+    sans-serif;
+  color: #555;
 }
 
 .qrContainer {

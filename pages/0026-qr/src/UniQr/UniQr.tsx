@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useId, useMemo } from 'react';
 import { QRCode, QRSvg } from 'sexy-qr';
 import logoSrc from './images/logo.svg?raw';
+import logoMonoSrc from './images/logo-mono.svg?raw';
 import { nearestSizeToPerfectFitCells } from '../helpers.ts';
 
 export interface UniQrProps {
@@ -13,19 +14,25 @@ export interface UniQrProps {
   perfectSize?: boolean;
   /** true — рисовать концентрическую рамку вокруг QR. */
   withFrame?: boolean;
+  /** true (по умолчанию) — скруглять outward-углы corner-блоков и рамки.
+   *  false — углы прямые (resolveCornerRadius возвращает 0). */
+  rounded?: boolean;
+  /** Фиксированный цвет заливки QR и логотипа. Если задан — градиент отключается,
+   *  используется монохромный логотип, перекрашенный в этот цвет. */
+  color?: string;
   /** className для корневого контейнера. */
   className?: string;
 }
 
-// Вертикальный градиент заливки QR: сверху #0BD3D6, снизу #209FFF.
+// Вертикальный градиент заливки QR (по умолчанию): сверху #0BD3D6, снизу #209FFF.
 // Path-ы sexy-qr наследуют fill корневого <svg>, поэтому достаточно объявить
 // градиент в <defs> и подсунуть url(#...) в опцию fill.
-// <image> логотипа fill не наследует — остаётся с исходными цветами.
+// <image> логотипа fill не наследует — остаётся с исходными цветами (для градиента)
+// или перекрашивается в `color` (для монохромного логотипа).
 //
 // ВАЖНО: gradientUnits="userSpaceOnUse" + реальная высота QR в px, а НЕ дефолтный
 // objectBoundingBox. Иначе координаты 0..1 считаются от bbox каждого path — и каждый
 // модуль получит свой персональный мини-градиент вместо одного общего.
-const GRADIENT_ID = 'qrGradient';
 const GRADIENT_TOP = '#0BD3D6';
 const GRADIENT_BOTTOM = '#209FFF';
 
@@ -34,9 +41,9 @@ const GRADIENT_BOTTOM = '#209FFF';
 const OUTWARD_OUTER_RADIUS = 4.3;
 const INWARD_OUTER_RADIUS = 2.8;
 
-// Рамка вокруг QR.
+// Рамка вокруг QR (рендерится HTML- div, не трогая SVG).
 const FRAME_COLOR = '#1e0843';
-const FRAME_WIDTH = 4; // px
+const FRAME_WIDTH = 5; // px
 const LOGO_MARGIN_CELLS = 1.25; // отступ логотипа (и рамки) от QR-контента, в клетках
 
 export default function UniQr({
@@ -44,35 +51,52 @@ export default function UniQr({
   baseSize,
   perfectSize = true,
   withFrame = false,
+  rounded = true,
+  color,
   className,
 }: UniQrProps) {
-  const svgCode = useMemo(() => {
+  // Уникальный id градиента — на странице может быть несколько QR, id не должен
+  // конфликтовать между ними.
+  const gradientId = useId().replace(/[:]/g, '');
+
+  const { svgCode, frameStyle } = useMemo(() => {
     // Высший уровень коррекции ошибок: в центре QR вырезается большой квадрат под
     // логотип (~14% модулей), нужна подстраховка уровня H (~30%).
     const qrCode = new QRCode({
       content: payload,
-      ecl: 'M',
+      ecl: 'H',
     });
 
     // Вырезаем нечётный по размеру квадрат в центре под логотип: нечётный размер
     // = идеальное центрирование по границам модулей.
-    const emptyCenterSize = 2 * Math.round((qrCode.size * 0.5) / 2) - 1;
+    const emptyCenterSize = 2 * Math.round((qrCode.size * 0.4) / 2) - 1;
     qrCode.emptyCenter(emptyCenterSize);
 
+    // Заливка QR: фиксированный цвет, если задан `color`, иначе общий градиент.
+    const fill = color ?? `url(#${gradientId})`;
+
     const qrSvg = new QRSvg(qrCode, {
-      fill: `url(#${GRADIENT_ID})`,
-      preContent: (q) => {
-        // Высота QR в px = число модулей × размер модуля. Один общий градиент
-        // по всей высоте в координатах всего <svg> (userSpaceOnUse).
-        const h = q.matrixSize * q.pointSize;
-        return `<defs><linearGradient id="${GRADIENT_ID}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="${h}"><stop offset="0" stop-color="${GRADIENT_TOP}"/><stop offset="1" stop-color="${GRADIENT_BOTTOM}"/></linearGradient></defs>`;
-      },
+      fill,
+      // Градиент нужен только когда fill ссылается на него (color не задан).
+      preContent: color
+        ? undefined
+        : (q) => {
+            // Высота QR в px = число модулей × размер модуля. Один общий градиент
+            // по всей высоте в координатах всего <svg> (userSpaceOnUse).
+            const h = q.matrixSize * q.pointSize;
+            return `<defs><linearGradient id="${gradientId}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="${h}"><stop offset="0" stop-color="${GRADIENT_TOP}"/><stop offset="1" stop-color="${GRADIENT_BOTTOM}"/></linearGradient></defs>`;
+          },
       size: perfectSize
         ? nearestSizeToPerfectFitCells(baseSize, qrCode.size)
         : baseSize,
       outerCornerRadius: 0,
       innerCornerRadius: 0,
       resolveCornerRadius: (corner) => {
+        // rounded=false — все углы прямые, не трогаем геометрию path-ов.
+        if (!rounded) {
+          return 0;
+        }
+
         const isCornerBlockRing =
           corner.region === 'cornerBlock' && corner.part === 'ring';
 
@@ -98,43 +122,49 @@ export default function UniQr({
         const margin = LOGO_MARGIN_CELLS * qrSvg.pointSize;
         const start = emptyStart + margin;
         const size = emptyEdge - 2 * margin;
+        // Цветной логотип (изображение) — при фикс-цвете перекрашиваем монохромный.
+        // fill на корне logo-mono.svg наследуется всеми внутренними path-ами,
+        // а CSS .st0{fill:#fff} (фон) имеет приоритет над атрибутом — остаётся белым.
+        const logoStr =
+          color != null
+            ? logoMonoSrc.replace('fill="#000000"', `fill="${color}"`)
+            : logoSrc;
         const logoDataUri =
           'data:image/svg+xml;base64,' +
-          window.btoa(unescape(encodeURIComponent(logoSrc)));
+          window.btoa(unescape(encodeURIComponent(logoStr)));
         return `<image x="${start}" y="${start}" width="${size}" height="${size}" href="${logoDataUri}" />`;
       },
     });
 
-    // Без рамки — отдаём QR как есть.
-    if (!withFrame) {
-      return qrSvg.svg;
-    }
-
-    // Концентрическая рамка вокруг QR на том же расстоянии, что и отступ логотипа.
-    // sexy-qr жёстко выдаёт viewBox="0 0 size size", а рамка должна быть снаружи —
-    // поэтому оборачиваем QR внешним <svg> с расширенным viewBox.
-    const qrSize = qrSvg.matrixSize * qrSvg.pointSize; // сторона QR в px
-    const frameMargin = LOGO_MARGIN_CELLS * qrSvg.pointSize; // зазор QR↔рамка
-    // Радиус outward-дуги QR в px (как в исходнике sexy-qr: c * pointSize / 2).
+    // Геометрия рамки для HTML-обёртки: padding = отступ логотипа (рамка на том же
+    // расстоянии от QR-контента), радиус — концентрический к outward-дуге QR.
+    // При rounded=false — рамка с прямыми углами.
+    const frameMargin = LOGO_MARGIN_CELLS * qrSvg.pointSize;
     const qrArcRadius = (OUTWARD_OUTER_RADIUS * qrSvg.pointSize) / 2;
-    // Концентрический радиус дуги рамки (по средней линии обводки): тот же центр,
-    // что у дуги QR, плюс зазор рамки и половина толщины обводки → постоянный зазор.
-    const frameArcRadius = qrArcRadius + frameMargin + FRAME_WIDTH / 2;
-    const outerSize = qrSize + 2 * (frameMargin + FRAME_WIDTH);
+    const frameArcRadius = rounded ? qrArcRadius + frameMargin : 0;
+    const frameStyle = {
+      padding: `${frameMargin}px`,
+      borderWidth: `${FRAME_WIDTH}px`,
+      borderStyle: 'solid',
+      borderColor: FRAME_COLOR,
+      borderRadius: `${frameArcRadius}px`,
+      boxSizing: 'content-box',
+    } as const;
 
-    return (
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${-frameMargin - FRAME_WIDTH} ${-frameMargin - FRAME_WIDTH} ${outerSize} ${outerSize}" width="${outerSize}" height="${outerSize}">` +
-      `<rect x="${-frameMargin - FRAME_WIDTH / 2}" y="${-frameMargin - FRAME_WIDTH / 2}" width="${qrSize + 2 * frameMargin + FRAME_WIDTH}" height="${qrSize + 2 * frameMargin + FRAME_WIDTH}" rx="${frameArcRadius}" fill="none" stroke="${FRAME_COLOR}" stroke-width="${FRAME_WIDTH}" />` +
-      qrSvg.svg +
-      `</svg>`
-    );
-  }, [payload, baseSize, perfectSize, withFrame]);
+    return { svgCode: qrSvg.svg, frameStyle };
+  }, [payload, baseSize, perfectSize, rounded, color, gradientId]);
 
-  return (
+  const inner = (
     <div
       className={className}
       role="presentation"
       dangerouslySetInnerHTML={{ __html: svgCode }}
     />
   );
+
+  if (!withFrame) {
+    return inner;
+  }
+
+  return <div style={frameStyle}>{inner}</div>;
 }
